@@ -1,24 +1,36 @@
 <atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
-    <plugin-info>
-        <description>${project.description}</description>
-        <version>${project.version}</version>
-        <vendor name="${project.organization.name}" url="${project.organization.url}" />
-        <param name="plugin-icon">images/pluginIcon.png</param>
-        <param name="plugin-logo">images/pluginLogo.png</param>
-    </plugin-info>
+  <plugin-info>
+    <description>${project.description}</description>
+    <version>${project.version}</version>
+    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+    <param name="plugin-icon">images/pluginIcon.png</param>
+    <param name="plugin-logo">images/pluginLogo.png</param>
+  </plugin-info>
 
-    <!-- add our i18n resource -->
-    <resource type="i18n" name="i18n" location="scio_search"/>
-    
-    <!-- add our web resources -->
-    <web-resource key="scio_search-resources" name="scio_search Web Resources">
-        <dependency>com.atlassian.auiplugin:ajs</dependency>
-        
-        <resource type="download" name="scio_search.css" location="/css/scio_search.css"/>
-        <resource type="download" name="scio_search.js" location="/js/scio_search.js"/>
-        <resource type="download" name="images/" location="/images"/>
+  <!-- add our i18n resource -->
+  <resource type="i18n" name="i18n" location="scio_search"/>
 
-        <context>scio_search</context>
-    </web-resource>
-    
+  <!-- add our web resources -->
+  <web-resource key="scio_search-resources" name="scio_search Web Resources">
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+
+    <resource type="download" name="scio_search.css" location="/css/scio_search.css"/>
+    <resource type="download" name="scio_search.js" location="/js/scio_search.js"/>
+    <resource type="download" name="images/" location="/images"/>
+
+    <context>scio_search</context>
+  </web-resource>
+
+  <servlet-filter key="scioSearchServletFilter"
+    class="com.askscio.atlassian_plugins.confluence.impl.ScioSearchServletFilter">
+    <description>Updates Scio ranking signals based on URLs visited.</description>
+    <url-pattern>*</url-pattern>
+  </servlet-filter>
+
+  <servlet key="scioSearchConfigServlet"
+    class="com.askscio.atlassian_plugins.confluence.impl.ScioSearchConfigServlet">
+    <description>Configures Scio plugin.</description>
+    <url-pattern>/admin/plugins/scio_search/configure</url-pattern>
+  </servlet>
+
 </atlassian-plugin>

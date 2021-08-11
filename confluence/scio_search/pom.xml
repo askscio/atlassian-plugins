@@ -1,131 +1,176 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>com.askscio.atlassian-plugins.confluence</groupId>
-    <artifactId>scio_search</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.askscio.atlassian_plugins.confluence</groupId>
+  <artifactId>scio_search</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
 
-    <organization>
-        <name>Example Company</name>
-        <url>http://www.example.com/</url>
-    </organization>
+  <organization>
+    <name>Scio</name>
+    <url>https://askscio.com/</url>
+  </organization>
 
-    <name>scio_search</name>
-    <description>This is the com.askscio.atlassian-plugins.confluence:scio_search plugin for Atlassian Confluence.</description>
-    <packaging>atlassian-plugin</packaging>
+  <name>scio_search</name>
+  <description>This is the com.askscio.atlassian_plugins.confluence:scio_search plugin for Atlassian
+    Confluence.
+  </description>
+  <packaging>atlassian-plugin</packaging>
 
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.10</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.atlassian.confluence</groupId>
-            <artifactId>confluence</artifactId>
-            <version>${confluence.version}</version>
-            <scope>provided</scope>
-        </dependency>
+  <dependencies>
+    <dependency>
+      <groupId>com.atlassian.plugin</groupId>
+      <artifactId>atlassian-spring-scanner-maven-plugin</artifactId>
+      <version>2.2.2</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <version>1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.atlassian.plugin</groupId>
+      <artifactId>atlassian-spring-scanner-annotation</artifactId>
+      <version>2.1.7</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.0.1</version>
+      <scope>provided</scope>
+    </dependency>
 
-        <dependency>
-            <groupId>com.atlassian.plugins</groupId>
-            <artifactId>atlassian-plugins-osgi-javaconfig</artifactId>
-            <version>${osgi.javaconfig.version}</version>
-        </dependency>
-        <!-- OSGi Java Config dependencies -->
-        <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.framework</artifactId>
-            <version>4.0.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>${spring.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
-            <scope>provided</scope>
-        </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.10</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.atlassian.confluence</groupId>
+      <artifactId>confluence</artifactId>
+      <version>${confluence.version}</version>
+      <scope>provided</scope>
+    </dependency>
 
-        <!-- WIRED TEST RUNNER DEPENDENCIES -->
-        <dependency>
-            <groupId>com.atlassian.plugins</groupId>
-            <artifactId>atlassian-plugins-osgi-testrunner</artifactId>
-            <version>${plugin.testrunner.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>1.1.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.2.2-atlassian-1</version>
-        </dependency>
-    </dependencies>
+    <dependency>
+      <groupId>com.atlassian.plugins</groupId>
+      <artifactId>atlassian-plugins-osgi-javaconfig</artifactId>
+      <version>${osgi.javaconfig.version}</version>
+    </dependency>
+    <!-- OSGi Java Config dependencies -->
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.apache.felix.framework</artifactId>
+      <version>4.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <version>${spring.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${spring.version}</version>
+      <scope>provided</scope>
+    </dependency>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>confluence-maven-plugin</artifactId>
-                <version>${amps.version}</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <productVersion>${confluence.version}</productVersion>
-                    <productDataVersion>${confluence.data.version}</productDataVersion>
-                    <enableQuickReload>true</enableQuickReload>
+    <!-- WIRED TEST RUNNER DEPENDENCIES -->
+    <dependency>
+      <groupId>com.atlassian.plugins</groupId>
+      <artifactId>atlassian-plugins-osgi-testrunner</artifactId>
+      <version>${plugin.testrunner.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>jsr311-api</artifactId>
+      <version>1.1.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.2.2-atlassian-1</version>
+    </dependency>
+  </dependencies>
 
-                    <!-- See here for an explanation of default instructions: -->
-                    <!-- https://developer.atlassian.com/docs/advanced-topics/configuration-of-instructions-in-atlassian-plugins -->
-                    <instructions>
-                        <Atlassian-Plugin-Key>${atlassian.plugin.key}</Atlassian-Plugin-Key>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.atlassian.plugin</groupId>
+        <artifactId>atlassian-spring-scanner-maven-plugin</artifactId>
+        <version>2.2.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>atlassian-spring-scanner</goal>
+            </goals>
+            <!-- process-classes seems to be skipped if you are using scala so perhaps use prepare-package -->
+            <phase>process-classes</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <!-- Enable this to get build-time logging of annotations atlassian-spring-scanner-maven-plugin has noticed -->
+          <verbose>true</verbose>
+        </configuration>
+      </plugin>
 
-                        <!-- Add package to export here -->
-                        <Export-Package>
-                            com.askscio.atlassian-plugins.confluence.api,
-                        </Export-Package>
+      <plugin>
+        <groupId>com.atlassian.maven.plugins</groupId>
+        <artifactId>confluence-maven-plugin</artifactId>
+        <version>${amps.version}</version>
+        <extensions>true</extensions>
+        <configuration>
+          <productVersion>${confluence.version}</productVersion>
+          <productDataVersion>${confluence.data.version}</productDataVersion>
+          <enableQuickReload>true</enableQuickReload>
 
-                        <!-- Add package import here -->
-                        <Import-Package>
-                            org.springframework.osgi.*;resolution:="optional",
-                            org.eclipse.gemini.blueprint.*;resolution:="optional",
-                            *
-                        </Import-Package>
+          <!-- See here for an explanation of default instructions: -->
+          <!-- https://developer.atlassian.com/docs/advanced-topics/configuration-of-instructions-in-atlassian-plugins -->
+          <instructions>
+            <Atlassian-Plugin-Key>${atlassian.plugin.key}</Atlassian-Plugin-Key>
 
-                        <!-- Ensure plugin is spring powered -->
-                        <Spring-Context>*</Spring-Context>
-                    </instructions>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+            <!-- Add package to export here -->
+            <Export-Package>
+              com.askscio.atlassian_plugins.confluence.api,
+            </Export-Package>
 
-    <properties>
-        <confluence.version>6.14.0</confluence.version>
-        <confluence.data.version>6.14.0</confluence.data.version>
-        <amps.version>8.1.2</amps.version>
-        <plugin.testrunner.version>2.0.2</plugin.testrunner.version>
-        <osgi.javaconfig.version>0.2.0</osgi.javaconfig.version>
-        <spring.version>4.2.5.RELEASE</spring.version>
-        <!-- This property ensures consistency between the key in atlassian-plugin.xml and the OSGi bundle's key. -->
-        <atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
+            <!-- Add package import here -->
+            <Import-Package>
+              org.springframework.osgi.*;resolution:="optional",
+              org.eclipse.gemini.blueprint.*;resolution:="optional",
+              *
+            </Import-Package>
+
+            <!-- Ensure plugin is spring powered -->
+            <Spring-Context>*</Spring-Context>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <properties>
+    <confluence.version>6.14.0</confluence.version>
+    <confluence.data.version>6.14.0</confluence.data.version>
+    <amps.version>8.1.2</amps.version>
+    <plugin.testrunner.version>2.0.2</plugin.testrunner.version>
+    <osgi.javaconfig.version>0.2.0</osgi.javaconfig.version>
+    <spring.version>4.2.5.RELEASE</spring.version>
+    <!-- This property ensures consistency between the key in atlassian-plugin.xml and the OSGi bundle's key. -->
+    <atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
 
 </project>
