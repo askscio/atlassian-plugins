@@ -11,17 +11,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import com.atlassian.extras.common.log.Logger;
 
 @Named
 @Path("/configure")
 public class ScioSearchConfigRestPlugin {
+
+  private static final Logger.Log logger = Logger.getInstance(ScioSearchConfigRestPlugin.class);
 
   @ConfluenceImport private final UserManager userManager;
   @ConfluenceImport private final PluginSettingsFactory pluginSettingsFactory;
@@ -63,6 +65,7 @@ public class ScioSearchConfigRestPlugin {
     }
     final PluginSettings pluginSettings = pluginSettingsFactory.createGlobalSettings();
     pluginSettings.put(TARGET_CONFIG_KEY, request.getTarget());
+    logger.info(String.format("Target changed to: %s", request.getTarget()));
     return getTarget();
   }
 }
