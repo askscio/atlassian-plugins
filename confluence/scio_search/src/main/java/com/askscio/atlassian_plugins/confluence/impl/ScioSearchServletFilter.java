@@ -30,8 +30,7 @@ public class ScioSearchServletFilter implements Filter {
 
   private static final Logger logger = Logger.getLogger(ScioSearchServletFilter.class.getName());
 
-  @ConfluenceImport
-  private final PluginSettingsFactory pluginSettingsFactory;
+  @ConfluenceImport private final PluginSettingsFactory pluginSettingsFactory;
 
   @Inject
   public ScioSearchServletFilter(final PluginSettingsFactory pluginSettingsFactory) {
@@ -47,8 +46,10 @@ public class ScioSearchServletFilter implements Filter {
   public void doFilter(
       ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
       throws IOException, ServletException {
-    SettingsManager settingsManager = (SettingsManager) ContainerManager.getComponent("settingsManager");
-    System.err.println(String.format("SETTINGS MANAGER %s", settingsManager.getGlobalSettings().getBaseUrl()));
+    SettingsManager settingsManager =
+        (SettingsManager) ContainerManager.getComponent("settingsManager");
+    System.err.println(
+        String.format("SETTINGS MANAGER %s", settingsManager.getGlobalSettings().getBaseUrl()));
     PluginSettings pluginSettings = pluginSettingsFactory.createGlobalSettings();
     System.err.println(String.format("PLUGIN SETTINGS %s", pluginSettings));
     final String target = (String) pluginSettings.get(TARGET_CONFIG_KEY);
@@ -61,18 +62,8 @@ public class ScioSearchServletFilter implements Filter {
         System.err.println("NO CURRENT USER");
       } else {
         System.err.println("CURRENT USER: " + user.getKey().getStringValue());
-
         if (target != null && !target.isEmpty()) {
-          final URL url = new URL(target);
-          final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-          connection.setRequestMethod("POST");
-          connection.setRequestProperty("Content-type", "application/json; charset=utf-8");
-          connection.setDoOutput(true);
-          final OutputStream output = connection.getOutputStream();
-          final String json = String.format("{\"url\":\"%s\",\"user\":\"%s\"}", httpreq.getRequestURI(), user.getLowerName());
-          final byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
-          output.write(bytes);
-          System.err.println(String.format("RESPONSE %d", connection.getResponseCode()));
+          sendWebhook(target, httpreq.getRequestURI(), user.getLowerName());
         }
       }
     } else {
@@ -86,9 +77,19 @@ public class ScioSearchServletFilter implements Filter {
     System.err.println("FILTER DESTROYED");
   }
 
-  private void sendWebhook(String url, String user) {
+  private void sendWebhook(String target, String visitedUrl, String user) {
     try {
-
+      final URL url = new URL(target);
+      final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+      connection.setRequestMethod("POST");
+      connection.setRequestProperty("Content-type", "application/json; charset=utf-8");
+      connection.setDoOutput(true);
+      final OutputStream output = connection.getOutputStream();
+      final String json =
+          String.format("{\"url\":\"%s\",\"user\":\"%s\"}", visitedUrl, user);
+      final byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
+      output.write(bytes);
+      System.err.println(String.format("RESPONSE %d", connection.getResponseCode()));
     } catch (Exception e) {
       logger.warning(String.format("Failed to send Scio webhook: %s", e));
     }
