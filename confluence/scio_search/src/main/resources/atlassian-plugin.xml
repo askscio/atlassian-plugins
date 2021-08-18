@@ -27,10 +27,8 @@
     <url-pattern>*</url-pattern>
   </servlet-filter>
 
-  <servlet key="scioSearchConfigServlet"
-    class="com.askscio.atlassian_plugins.confluence.impl.ScioSearchConfigServlet">
-    <description>Configures Scio plugin.</description>
-    <url-pattern>/admin/plugins/scio_search/configure</url-pattern>
-  </servlet>
+  <rest key="scioSearchConfigRest" path="/scio_search" version="1.0">
+    <description>Provides Scio Search plugin configuration endpoint.</description>
+  </rest>
 
 </atlassian-plugin>
