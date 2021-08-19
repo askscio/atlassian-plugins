@@ -68,7 +68,8 @@ public class ScioSearchServletFilter implements Filter {
     }
 
     final HttpServletRequest httpreq = (HttpServletRequest) servletRequest;
-    if (!httpreq.getRequestURI().contains("viewpage")) {
+    if (!httpreq.getRequestURI().contains("viewpage")
+        && !httpreq.getRequestURI().contains("/display/")) {
       logger.debug(String.format("Uninteresting visit: %s", httpreq.getRequestURI()));
       filterChain.doFilter(servletRequest, servletResponse);
       return;
@@ -125,12 +126,19 @@ public class ScioSearchServletFilter implements Filter {
 
     final URL visitUrl;
     try {
-      visitUrl = new URL(baseURL + httpreq.getRequestURI());
+      visitUrl =
+          new URL(
+              String.format(
+                  "%s%s?%s",
+                  baseURL.substring(0, baseURL.lastIndexOf("/")),
+                  httpreq.getRequestURI(),
+                  httpreq.getQueryString()));
     } catch (MalformedURLException e) {
       logger.warn(String.format("Malformed URL: %s", e.getMessage()));
       filterChain.doFilter(servletRequest, servletResponse);
       return;
     }
+    logger.debug(String.format("Visit url %s", visitUrl));
     try {
       executor.submit(new ScioWebhookTask(target, visitUrl.toString(), user.getLowerName()));
     } catch (RejectedExecutionException e) {
