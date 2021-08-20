@@ -34,6 +34,7 @@ public class ScioSearchServletFilter implements Filter {
 
   private static final int NUM_BACKGROUND_THREADS = 1;
   private static final int MAX_OUTSTANDING_REQUESTS = 10;
+  private static final int BASE_URL_MIN_PREFIX = "https://".length() + 1;
 
   private static final Logger.Log logger = Logger.getInstance(ScioSearchServletFilter.class);
 
@@ -90,11 +91,18 @@ public class ScioSearchServletFilter implements Filter {
       return;
     }
 
-    final String baseURL = globalSettings.getBaseUrl();
+    String baseURL = globalSettings.getBaseUrl();
     if (baseURL == null || baseURL.isEmpty()) {
       logger.warn("Missing baseURL");
       filterChain.doFilter(servletRequest, servletResponse);
       return;
+    }
+    if (baseURL.length() > BASE_URL_MIN_PREFIX) {
+      final int thirdSlash = baseURL.indexOf("/", BASE_URL_MIN_PREFIX);
+      if (thirdSlash > 0) {
+        logger.debug(String.format("BaseURL %s trimming to %d", baseURL, thirdSlash));
+        baseURL = baseURL.substring(0, thirdSlash);
+      }
     }
 
     if (pluginSettingsFactory == null) {
@@ -128,11 +136,7 @@ public class ScioSearchServletFilter implements Filter {
     try {
       visitUrl =
           new URL(
-              String.format(
-                  "%s%s?%s",
-                  baseURL.substring(0, baseURL.lastIndexOf("/")),
-                  httpreq.getRequestURI(),
-                  httpreq.getQueryString()));
+              String.format("%s%s?%s", baseURL, httpreq.getRequestURI(), httpreq.getQueryString()));
     } catch (MalformedURLException e) {
       logger.warn(String.format("Malformed URL: %s", e.getMessage()));
       filterChain.doFilter(servletRequest, servletResponse);
