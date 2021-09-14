@@ -43,7 +43,7 @@ The `target` URL will then be sent webhooks for page views. `GET` will return th
 ## Debugging
 
 To enable debug logs:
-1. Go to `Logging and Profiling` in Confluence's administration settinsg.
+1. Go to `Logging and Profiling` in Confluence's administration settings.
 1. Add a new entry for `com.askscio.atlassian_plugins.confluence.impl`
 1. Set the level to:
    * `WARN` to see error messages.
