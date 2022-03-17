@@ -35,7 +35,7 @@ Listens on `/rest/scio_search/1.0/configure`. Requires `confluence-administrator
 Accepts `POST` of the form:
 ```
 {
-    "target": "https://<customer>.askscio.com/instance/CONFLUENCE/scio_event"
+    "target": "https://<customer>-be.glean.com/instance/CONFLUENCE/scio_event"
 }
 ```
 The `target` URL will then be sent webhooks for page views. `GET` will return the current config.
