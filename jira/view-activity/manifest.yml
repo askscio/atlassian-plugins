@@ -1,0 +1,30 @@
+modules:
+  trigger:
+    - key: view-activity
+      function: view
+      events:
+        - avi:jira:viewed:issue
+    - key: create-activity
+      function: create
+      events:
+        - avi:jira:created:issue
+    - key: update-activity
+      function: update
+      events:
+        - avi:jira:updated:issue
+  function:
+    - key: view
+      handler: index.viewHandler
+    - key: create
+      handler: index.createHandler
+    - key: update
+      handler: index.updateHandler
+app:
+  id: ari:cloud:ecosystem::app/a5970721-2739-433b-9c1f-7d1c10b91367
+permissions:
+  scopes:
+    - read:issue:jira
+    - read:issue-type:jira
+    - read:user:jira
+    - read:project:jira
+    - read:status:jira
