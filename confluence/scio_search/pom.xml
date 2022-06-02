@@ -7,7 +7,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.askscio.atlassian_plugins.confluence</groupId>
   <artifactId>scio_search</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>1.2.0-SNAPSHOT</version>
 
   <organization>
     <name>Scio</name>
@@ -129,7 +129,21 @@
           <verbose>true</verbose>
         </configuration>
       </plugin>
-
+      <plugin>
+        <groupId>org.owasp</groupId>
+        <artifactId>dependency-check-maven</artifactId>
+        <version>7.1.0</version>
+        <configuration>
+          <skipProvidedScope>true</skipProvidedScope>
+        </configuration>
+        <executions>
+            <execution>
+                <goals>
+                    <goal>check</goal>
+                </goals>
+            </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>com.atlassian.maven.plugins</groupId>
         <artifactId>confluence-maven-plugin</artifactId>
@@ -166,8 +180,8 @@
   </build>
 
   <properties>
-    <confluence.version>6.14.0</confluence.version>
-    <confluence.data.version>6.14.0</confluence.data.version>
+    <confluence.version>7.13.5</confluence.version>
+    <confluence.data.version>7.13.5</confluence.data.version>
     <amps.version>8.1.2</amps.version>
     <plugin.testrunner.version>2.0.2</plugin.testrunner.version>
     <osgi.javaconfig.version>0.2.0</osgi.javaconfig.version>
