@@ -14,8 +14,8 @@
     <url>https://www.glean.com/</url>
   </organization>
 
-  <name>scio_search</name>
-  <description>This is the com.askscio.atlassian_plugins.confluence:scio_search plugin for Atlassian
+  <name>glean_search</name>
+  <description>This is the com.askscio.atlassian_plugins.confluence:glean_search plugin for Atlassian
     Confluence.
   </description>
   <packaging>atlassian-plugin</packaging>
