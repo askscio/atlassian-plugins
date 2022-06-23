@@ -6,12 +6,12 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.askscio.atlassian_plugins.confluence</groupId>
-  <artifactId>scio_search</artifactId>
-  <version>1.3.1</version>
+  <artifactId>glean_search</artifactId>
+  <version>1.0.0</version>
 
   <organization>
-    <name>Scio</name>
-    <url>https://askscio.com/</url>
+    <name>Glean</name>
+    <url>https://www.glean.com/</url>
   </organization>
 
   <name>scio_search</name>
