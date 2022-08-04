@@ -1,0 +1,23 @@
+modules:
+  trigger:
+    - key: view-activity
+      function: view
+      events:
+        - avi:jira:viewed:issue
+  function:
+    - key: view
+      handler: index.eventHandler
+app:
+  id: ari:cloud:ecosystem::app/99fb9271-5707-4cce-9f9d-6c65a37e607c
+permissions:
+  scopes:
+    - read:issue:jira
+    - read:issue-type:jira
+    - read:user:jira
+    - read:project:jira
+    - read:status:jira
+    - read:jira-work
+  external:
+    fetch:
+      backend:
+        - 'https://webhook.site/7ef76c62-d490-4f9b-927f-7bb19a34fa84'
