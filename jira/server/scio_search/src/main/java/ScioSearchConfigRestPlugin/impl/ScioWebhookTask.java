@@ -1,4 +1,4 @@
-package GleanSearchConfigRestPlugin.impl;
+package ScioSearchConfigRestPlugin.impl;
 
 import com.atlassian.extras.common.log.Logger;
 import java.io.OutputStream;

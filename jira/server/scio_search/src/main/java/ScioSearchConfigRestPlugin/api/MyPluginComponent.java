@@ -1,4 +1,4 @@
-package GleanSearchConfigRestPlugin.api;
+package ScioSearchConfigRestPlugin.api;
 
 public interface MyPluginComponent
 {

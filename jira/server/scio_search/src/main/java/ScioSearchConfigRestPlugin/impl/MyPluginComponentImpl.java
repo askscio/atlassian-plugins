@@ -1,6 +1,6 @@
-package GleanSearchConfigRestPlugin.impl;
+package ScioSearchConfigRestPlugin.impl;
 
-import GleanSearchConfigRestPlugin.api.MyPluginComponent;
+import ScioSearchConfigRestPlugin.api.MyPluginComponent;
 import com.atlassian.sal.api.ApplicationProperties;
 
 public class MyPluginComponentImpl implements MyPluginComponent {

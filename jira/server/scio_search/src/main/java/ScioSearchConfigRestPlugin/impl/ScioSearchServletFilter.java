@@ -1,6 +1,6 @@
-package GleanSearchConfigRestPlugin.impl;
+package ScioSearchConfigRestPlugin.impl;
 
-import static GleanSearchConfigRestPlugin.impl.MyPluginComponentImpl.TARGET_CONFIG_KEY;
+import static ScioSearchConfigRestPlugin.impl.MyPluginComponentImpl.TARGET_CONFIG_KEY;
 
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.component.ComponentAccessor;
@@ -65,6 +65,7 @@ public class ScioSearchServletFilter implements Filter {
     }
 
     final HttpServletRequest httpreq = (HttpServletRequest) servletRequest;
+    logger.debug(String.format("Received HTTP request: %s", httpreq.getRequestURI()));
     if (!httpreq.getRequestURI().contains("viewpage")
         && !httpreq.getRequestURI().contains("/display/")) {
       logger.debug(String.format("Uninteresting visit: %s", httpreq.getRequestURI()));
@@ -88,6 +89,7 @@ public class ScioSearchServletFilter implements Filter {
 //    }
 
     String baseURL = ComponentAccessor.getApplicationProperties().getString("jira.baseurl");
+    logger.debug(String.format("jira.baseurl: %s", baseURL));
 //    String baseURL = globalSettings.getBaseUrl();
     if (baseURL == null || baseURL.isEmpty()) {
       logger.warn("Missing baseURL");

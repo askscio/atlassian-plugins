@@ -1,4 +1,4 @@
-package GleanSearchConfigRestPlugin.impl;
+package ScioSearchConfigRestPlugin.impl;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;

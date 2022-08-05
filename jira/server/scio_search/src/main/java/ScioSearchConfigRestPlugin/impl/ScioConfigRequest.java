@@ -1,4 +1,4 @@
-package GleanSearchConfigRestPlugin.impl;
+package ScioSearchConfigRestPlugin.impl;
 
 public class ScioConfigRequest {
   private String target;
