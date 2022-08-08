@@ -65,32 +65,14 @@ public class ScioSearchServletFilter implements Filter {
     }
 
     final HttpServletRequest httpreq = (HttpServletRequest) servletRequest;
-    logger.debug(String.format("Received HTTP request: %s", httpreq.getRequestURI()));
-    if (!httpreq.getRequestURI().contains("viewpage")
-        && !httpreq.getRequestURI().contains("/display/")) {
+    if (!httpreq.getRequestURI().contains("/browse/")) {
       logger.debug(String.format("Uninteresting visit: %s", httpreq.getRequestURI()));
       filterChain.doFilter(servletRequest, servletResponse);
       return;
     }
 
-//    final SettingsManager settingsManager =
-//        (SettingsManager) ContainerManager.getComponent("settingsManager");
-//    if (settingsManager == null) {
-//      logger.warn("Missing settingsManager");
-//      filterChain.doFilter(servletRequest, servletResponse);
-//      return;
-//    }
-//
-//    final Settings globalSettings = settingsManager.getGlobalSettings();
-//    if (globalSettings == null) {
-//      logger.warn("Missing globalSettings");
-//      filterChain.doFilter(servletRequest, servletResponse);
-//      return;
-//    }
-
     String baseURL = ComponentAccessor.getApplicationProperties().getString("jira.baseurl");
     logger.debug(String.format("jira.baseurl: %s", baseURL));
-//    String baseURL = globalSettings.getBaseUrl();
     if (baseURL == null || baseURL.isEmpty()) {
       logger.warn("Missing baseURL");
       filterChain.doFilter(servletRequest, servletResponse);
@@ -126,7 +108,6 @@ public class ScioSearchServletFilter implements Filter {
 
     final ApplicationUser user = ComponentAccessor.getJiraAuthenticationContext().getLoggedInUser();
 
-//    final ConfluenceUser user = AuthenticatedUserThreadLocal.get();
     if (user == null) {
       logger.debug("Anonymous page visit");
       filterChain.doFilter(servletRequest, servletResponse);

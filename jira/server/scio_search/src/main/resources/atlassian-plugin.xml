@@ -28,10 +28,7 @@
   <servlet-filter key="scioSearchServletFilter"
     class="ScioSearchConfigRestPlugin.impl.ScioSearchServletFilter" >
     <description>Updates Scio ranking signals based on URLs visited.</description>
-<!--    <url-pattern>*</url-pattern>-->
-<!--    <url-pattern>/*</url-pattern>-->
-    <url-pattern>*</url-pattern>
-<!--    <url-pattern>/browse/*</url-pattern>-->
+    <url-pattern>/*</url-pattern>
     <dispatcher>FORWARD</dispatcher>
     <dispatcher>INCLUDE</dispatcher>
     <dispatcher>REQUEST</dispatcher>
