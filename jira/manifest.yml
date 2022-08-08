@@ -8,7 +8,7 @@ modules:
     - key: view
       handler: index.eventHandler
 app:
-  id: ari:cloud:ecosystem::app/99fb9271-5707-4cce-9f9d-6c65a37e607c
+  id: ari:cloud:ecosystem::app/cc33f45f-c163-4125-8734-e335673efc8b
 permissions:
   scopes:
     - read:issue:jira
@@ -20,4 +20,4 @@ permissions:
   external:
     fetch:
       backend:
-        - 'https://webhook.site/7ef76c62-d490-4f9b-927f-7bb19a34fa84'
+        - 'https://webhook.site/c780948b-91d8-40ee-800b-3a7096831bdf'
