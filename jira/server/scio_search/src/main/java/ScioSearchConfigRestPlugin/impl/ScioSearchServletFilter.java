@@ -65,7 +65,12 @@ public class ScioSearchServletFilter implements Filter {
     }
 
     final HttpServletRequest httpreq = (HttpServletRequest) servletRequest;
-    if (!httpreq.getRequestURI().contains("/browse/")) {
+//    logger.debug(String.format("Received HTTP request: URI- %s, query string- %s", httpreq.getRequestURI(), httpreq.getQueryString()));
+    if (!httpreq.getRequestURI().contains("/browse/") &&
+        !(httpreq.getRequestURI().contains("/secure/ProjectIssueNavigatorAction!issueViewWithSidebar.jspa")) &&
+        !(httpreq.getRequestURI().contains("/secure/AjaxIssueAction!default.jspa")) &&
+        !(httpreq.getRequestURI().contains("/secure/Dashboard.jspa")) &&
+        !(httpreq.getRequestURI().replaceAll("/$", "").equals("/issues"))){
       logger.debug(String.format("Uninteresting visit: %s", httpreq.getRequestURI()));
       filterChain.doFilter(servletRequest, servletResponse);
       return;
