@@ -63,6 +63,7 @@ public class ScioSearchConfigRestPlugin {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public ScioConfigResponse setTarget(ScioConfigRequest request) {
+    logger.debug(String.format("Received request for setting target url: %s", request.getTarget()));
     validateUserIsAdmin();
     try {
       new URL(request.getTarget());
