@@ -1,0 +1,23 @@
+modules:
+  trigger:
+    - key: view-activity
+      function: view
+      events:
+        - avi:jira:viewed:issue
+  function:
+    - key: view
+      handler: index.eventHandler
+app:
+  id: ari:cloud:ecosystem::app/cc33f45f-c163-4125-8734-e335673efc8b
+permissions:
+  scopes:
+    - read:issue:jira
+    - read:issue-type:jira
+    - read:user:jira
+    - read:project:jira
+    - read:status:jira
+    - read:jira-work
+  external:
+    fetch:
+      backend:
+        - 'https://scio-apps.appspot.com/datasources/jira/events'
