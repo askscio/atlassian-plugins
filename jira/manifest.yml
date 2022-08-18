@@ -20,4 +20,4 @@ permissions:
   external:
     fetch:
       backend:
-        - 'https://webhook.site/c780948b-91d8-40ee-800b-3a7096831bdf'
+        - 'https://scio-apps.appspot.com/datasources/jira/events'
