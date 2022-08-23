@@ -3,7 +3,7 @@ import { fetch } from '@forge/api';
 export async function eventHandler(event, context) {
 	console.log('Event Captured')
 	// for backend perms: https://developer.atlassian.com/platform/forge/manifest-reference/permissions/#external-permissions
-	var targetURL = 'https://scio-apps.appspot.com/datasources/jira/events'
+	var targetURL = 'https://scio-apps.appspot.com/datasources/jira/forge'
 	console.log(`Target URL ${targetURL}`)
 	const response = await fetch(targetURL, {
 		method: 'POST', 

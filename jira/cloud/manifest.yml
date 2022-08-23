@@ -20,4 +20,4 @@ permissions:
   external:
     fetch:
       backend:
-        - 'https://scio-apps.appspot.com/datasources/jira/events'
+        - 'https://scio-apps.appspot.com/datasources/jira/forge'
