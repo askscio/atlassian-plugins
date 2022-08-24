@@ -1,16 +1,12 @@
 package ScioSearchConfigRestPlugin.impl;
 
-//import static GleanSearchConfigRestPlugin.api.MyPluginComponent;
 import static ScioSearchConfigRestPlugin.impl.MyPluginComponentImpl.TARGET_CONFIG_KEY;
 
 import com.atlassian.extras.common.log.Logger;
-//import com.atlassian.jira.component.ComponentAccessor;
-//import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.plugin.spring.scanner.annotation.imports.JiraImport;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.atlassian.sal.api.user.UserManager;
-//import com.atlassian.jira.user.util.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -41,7 +37,6 @@ public class ScioSearchConfigRestPlugin {
   }
 
   private void validateUserIsAdmin() {
-//    final ApplicationUser user = ComponentAccessor.getJiraAuthenticationContext().getLoggedInUser();
     final UserProfile profile = userManager.getRemoteUser();
     if (profile == null || !userManager.isSystemAdmin(profile.getUserKey())) {
       throw new UnauthorizedException("Unauthorized");
