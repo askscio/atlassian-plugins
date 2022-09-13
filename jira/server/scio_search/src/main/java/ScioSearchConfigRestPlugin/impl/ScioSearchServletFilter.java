@@ -72,9 +72,12 @@ public class ScioSearchServletFilter implements Filter {
         !(httpreq.getRequestURI().replaceAll("/$", "").equals("/issues"))) ||
         /* ignore urls like /secure/Dashboard.jspa?null, /secure/AjaxIssueAction!default.jspa?null,
         /secure/ProjectIssueNavigatorAction!issueViewWithSidebar.jspa?null */
-        (httpreq.getRequestURI().equals("/secure/Dashboard.jspa") && !httpreq.getQueryString().contains("selectPageId")) ||
-        (httpreq.getRequestURI().equals("/secure/AjaxIssueAction!default.jspa") && !httpreq.getQueryString().contains("issueKey")) ||
-        (httpreq.getRequestURI().equals("/secure/ProjectIssueNavigatorAction!issueViewWithSidebar.jspa") && !httpreq.getQueryString().contains("issueKey"))) {
+        (httpreq.getRequestURI().equals("/secure/Dashboard.jspa") &&
+            httpreq.getQueryString()==null) ||
+        (httpreq.getRequestURI().equals("/secure/AjaxIssueAction!default.jspa") &&
+            httpreq.getQueryString()==null) ||
+        (httpreq.getRequestURI().equals("/secure/ProjectIssueNavigatorAction!issueViewWithSidebar.jspa") &&
+            httpreq.getQueryString()==null)) {
       logger.debug(String.format("Uninteresting visit: %s", httpreq.getRequestURI()));
       filterChain.doFilter(servletRequest, servletResponse);
       return;
