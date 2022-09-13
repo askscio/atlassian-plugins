@@ -65,19 +65,23 @@ public class ScioSearchServletFilter implements Filter {
     }
 
     final HttpServletRequest httpreq = (HttpServletRequest) servletRequest;
-    if ((!httpreq.getRequestURI().contains("/browse/") &&
-        !(httpreq.getRequestURI().contains("/secure/ProjectIssueNavigatorAction!issueViewWithSidebar.jspa")) &&
-        !(httpreq.getRequestURI().contains("/secure/AjaxIssueAction!default.jspa")) &&
-        !(httpreq.getRequestURI().contains("/secure/Dashboard.jspa")) &&
-        !(httpreq.getRequestURI().replaceAll("/$", "").equals("/issues"))) ||
+    String requestURI = httpreq.getRequestURI();
+    String queryStr = httpreq.getQueryString();
+    if ((!requestURI.contains("/browse/") &&
+        !requestURI.contains("/secure/ProjectIssueNavigatorAction!issueViewWithSidebar.jspa") &&
+        !requestURI.contains("/secure/AjaxIssueAction!default.jspa") &&
+        !requestURI.contains("/secure/Dashboard.jspa") &&
+        !requestURI.replaceAll("/$", "").equals("/issues")) ||
         /* ignore urls like /secure/Dashboard.jspa?null, /secure/AjaxIssueAction!default.jspa?null,
         /secure/ProjectIssueNavigatorAction!issueViewWithSidebar.jspa?null */
-        (httpreq.getRequestURI().equals("/secure/Dashboard.jspa") &&
-            httpreq.getQueryString()==null) ||
-        (httpreq.getRequestURI().equals("/secure/AjaxIssueAction!default.jspa") &&
-            httpreq.getQueryString()==null) ||
-        (httpreq.getRequestURI().equals("/secure/ProjectIssueNavigatorAction!issueViewWithSidebar.jspa") &&
-            httpreq.getQueryString()==null)) {
+        (requestURI.equals("/secure/Dashboard.jspa") &&
+            (queryStr==null || !queryStr.contains("selectPageId"))) ||
+        (requestURI.equals("/secure/AjaxIssueAction!default.jspa") &&
+            (queryStr==null || !queryStr.contains("issueKey"))) ||
+        (requestURI.equals("/secure/ProjectIssueNavigatorAction!issueViewWithSidebar.jspa") &&
+            (queryStr==null || !queryStr.contains("issueKey"))) ||
+        (requestURI.replaceAll("/$", "").equals("/issues") &&
+            (queryStr==null || !queryStr.contains("filter")))) {
       logger.debug(String.format("Uninteresting visit: %s", httpreq.getRequestURI()));
       filterChain.doFilter(servletRequest, servletResponse);
       return;
