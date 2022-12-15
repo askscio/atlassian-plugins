@@ -5,11 +5,9 @@ import com.atlassian.confluence.security.SpacePermission;
 import com.atlassian.confluence.security.SpacePermissionManager;
 import com.atlassian.confluence.spaces.Space;
 import com.atlassian.confluence.spaces.SpaceManager;
-import com.atlassian.confluence.user.ConfluenceUserManager;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ConfluenceImport;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
-import com.atlassian.user.EntityException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,15 +30,13 @@ public class ScioSearchSpacePermissionsFetch {
   @ConfluenceImport private final UserManager userManager;
   @ConfluenceImport private final SpaceManager spaceManager;
   @ConfluenceImport private final SpacePermissionManager spacePermissionManager;
-  @ConfluenceImport private final ConfluenceUserManager confluenceUserManager;
 
   @Inject
   public ScioSearchSpacePermissionsFetch(
-      UserManager userManager, SpaceManager spaceManager, SpacePermissionManager spacePermissionManager, ConfluenceUserManager confluenceUserManager) {
+      UserManager userManager, SpaceManager spaceManager, SpacePermissionManager spacePermissionManager) {
     this.userManager = userManager;
     this.spaceManager = spaceManager;
     this.spacePermissionManager = spacePermissionManager;
-    this.confluenceUserManager = confluenceUserManager;
   }
 
   private void validateUserIsAdmin() {
@@ -51,12 +47,9 @@ public class ScioSearchSpacePermissionsFetch {
   }
 
   private String getUserEmail(String username) {
-    try {
-      return confluenceUserManager.getUser(username).getEmail();
-    } catch (EntityException e) {
-      logger.error(String.format("Error while fetching user email for user %s: %s", username, e));
-      return null;
-    }
+    UserProfile userProfile =  userManager.getUserProfile(username);
+    if (userProfile!=null) return userProfile.getEmail();
+    return null;
   }
 
 
