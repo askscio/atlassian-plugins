@@ -23,7 +23,7 @@ import com.atlassian.extras.common.log.Logger;
 
 
 @Named
-@Path("/space_permissions")
+@Path("/")
 public class ScioSearchSpacePermissionsFetch {
 
   private static final Logger.Log logger = Logger.getInstance(ScioSearchSpacePermissionsFetch.class);
