@@ -35,8 +35,8 @@
     <description>Provides Scio Search plugin configuration endpoint.</description>
   </rest>
 
-  <rest key="scioSearchSpacePermissionFetch" path="/scio_search" version="1.0">
-    <description>Provides Scio Search plugin configuration endpoint.</description>
+  <rest key="scioSearchSpacePermissionFetch" path="/scio_spaces" version="1.0">
+    <description>Provides Scio Search plugin endpoint for fetching space permissions.</description>
   </rest>
 
 </atlassian-plugin>
