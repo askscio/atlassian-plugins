@@ -3,13 +3,10 @@ package com.askscio.atlassian_plugins.confluence.impl;
 
 import com.atlassian.confluence.api.service.content.SpaceService;
 import com.atlassian.confluence.security.SpacePermission;
-import com.atlassian.confluence.security.SpacePermissionManager;
 import com.atlassian.confluence.spaces.Space;
 import com.atlassian.confluence.security.persistence.dao.SpacePermissionDao;
-import com.atlassian.confluence.spaces.SpaceManager;
 import com.atlassian.confluence.user.ConfluenceUser;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ConfluenceImport;
-import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
 import java.util.ArrayList;
