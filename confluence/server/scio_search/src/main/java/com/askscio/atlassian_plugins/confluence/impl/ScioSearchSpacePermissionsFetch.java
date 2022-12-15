@@ -1,6 +1,5 @@
 package com.askscio.atlassian_plugins.confluence.impl;
 
-
 import com.atlassian.confluence.security.SpacePermission;
 import com.atlassian.confluence.security.SpacePermissionManager;
 import com.atlassian.confluence.spaces.Space;
@@ -21,9 +20,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import com.atlassian.extras.common.log.Logger;
 
-
 @Named
-@Path("/")
+@Path("/space_permissions")
 public class ScioSearchSpacePermissionsFetch {
 
   private static final Logger.Log logger = Logger.getInstance(ScioSearchSpacePermissionsFetch.class);
@@ -47,9 +45,11 @@ public class ScioSearchSpacePermissionsFetch {
     }
   }
 
-  private String getUserEmail(String username) {
-    UserProfile userProfile =  userManager.getUserProfile(username);
-    if (userProfile!=null) return userProfile.getEmail();
+  private String getUsername(String username) {
+    UserProfile userProfile = userManager.getUserProfile(username);
+    if (userProfile!=null) {
+      return userProfile.getUsername();
+    }
     return null;
   }
 
@@ -65,16 +65,15 @@ public class ScioSearchSpacePermissionsFetch {
     // but we want com.atlassian.confluence.spaces.Space object, as it has the permissions set (another way is to use SpaceDao, but plugin installation is
     // timing out when trying to inject it).
     // ALSO, a class part of the core package (com.atlassian.confluence.content.service.space.KeySpaceLocator) still uses getSpace!
-    Space space= this.spaceManager.getSpace(spaceKey);
+    Space space = this.spaceManager.getSpace(spaceKey);
     if (space == null) {
       logger.debug("Space not found for key: " + spaceKey);
+      throw new NotFoundException("Space not found");
     }
 
     ScioSpacePermissionsResponse response = new ScioSpacePermissionsResponse();
 
-    // fetch view permissions for space
-
-    Map<String, Long> groupsAndPermissionIds =  this.spacePermissionManager.getGroupsForPermissionType(SpacePermission.VIEWSPACE_PERMISSION, space);
+    Map<String, Long> groupsAndPermissionIds = this.spacePermissionManager.getGroupsForPermissionType(SpacePermission.VIEWSPACE_PERMISSION, space);
     logger.debug("Groups and permission ids: " + groupsAndPermissionIds.toString());
     List<String> groupsWithViewspacePermissions = new ArrayList<>();
     groupsAndPermissionIds.forEach((group, permissionId) -> {
@@ -82,12 +81,12 @@ public class ScioSearchSpacePermissionsFetch {
     });
     logger.debug("Groups with view space permissions: " + groupsWithViewspacePermissions);
 
-    Map<String, Long> usersAndPermissionIds =  this.spacePermissionManager.getUsersForPermissionType(SpacePermission.VIEWSPACE_PERMISSION, space);
+    Map<String, Long> usersAndPermissionIds = this.spacePermissionManager.getUsersForPermissionType(SpacePermission.VIEWSPACE_PERMISSION, space);
     logger.debug("Users and permission ids: " + usersAndPermissionIds.toString());
     List<String> usersWithViewspacePermissions = new ArrayList<>();
     usersAndPermissionIds.forEach((user, permissionId) -> {
-      String userEmail = getUserEmail(user);
-      usersWithViewspacePermissions.add(userEmail);
+      String username = getUsername(user);
+      usersWithViewspacePermissions.add(username);
     });
     logger.debug("Users with view space permissions: " + usersWithViewspacePermissions);
 
