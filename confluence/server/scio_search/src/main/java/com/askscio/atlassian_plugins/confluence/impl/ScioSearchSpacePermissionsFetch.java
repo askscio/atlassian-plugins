@@ -14,9 +14,11 @@ import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import com.atlassian.extras.common.log.Logger;
 
@@ -55,7 +57,7 @@ public class ScioSearchSpacePermissionsFetch {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public ScioSpacePermissionsResponse getPermissionsForSpace(ScioSpacePermissionsRequest request) {
+  public ScioSpacePermissionsResponse getPermissionsForSpace(@QueryParam("spaceKey") String spaceKey) {
     validateUserIsAdmin();
 
     // getSpace is deprecated v7.3.0 onwards, but is the only way to get this info currently,
@@ -64,9 +66,9 @@ public class ScioSearchSpacePermissionsFetch {
     // but we want com.atlassian.confluence.spaces.Space object, as it has the permissions set (another way is to use SpaceDao, but plugin installation is
     // timing out when trying to inject it).
     // ALSO, a class part of the core package (com.atlassian.confluence.content.service.space.KeySpaceLocator) still uses getSpace!
-    Space space= this.spaceManager.getSpace(request.spaceKey);
+    Space space= this.spaceManager.getSpace(spaceKey);
     if (space == null) {
-      logger.debug("Space not found for key: " + request.spaceKey);
+      logger.debug("Space not found for key: " + spaceKey);
     }
 
     ScioSpacePermissionsResponse response = new ScioSpacePermissionsResponse();
