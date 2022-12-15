@@ -1,14 +1,15 @@
 package com.askscio.atlassian_plugins.confluence.impl;
 
 
-import com.atlassian.confluence.api.service.content.SpaceService;
 import com.atlassian.confluence.security.SpacePermission;
+import com.atlassian.confluence.security.SpacePermissionManager;
 import com.atlassian.confluence.spaces.Space;
-import com.atlassian.confluence.security.persistence.dao.SpacePermissionDao;
-import com.atlassian.confluence.user.ConfluenceUser;
+import com.atlassian.confluence.spaces.SpaceManager;
+import com.atlassian.confluence.user.ConfluenceUserManager;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ConfluenceImport;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
+import com.atlassian.user.EntityException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,15 +30,17 @@ public class ScioSearchSpacePermissionsFetch {
   private static final Logger.Log logger = Logger.getInstance(ScioSearchSpacePermissionsFetch.class);
 
   @ConfluenceImport private final UserManager userManager;
-  @ConfluenceImport private final SpaceService spaceService;
-  @ConfluenceImport private final SpacePermissionDao spacePermissionDao;
+  @ConfluenceImport private final SpaceManager spaceManager;
+  @ConfluenceImport private final SpacePermissionManager spacePermissionManager;
+  @ConfluenceImport private final ConfluenceUserManager confluenceUserManager;
 
   @Inject
   public ScioSearchSpacePermissionsFetch(
-      UserManager userManager, SpaceService spaceService, SpacePermissionDao spacePermissionDao) {
+      UserManager userManager, SpaceManager spaceManager, SpacePermissionManager spacePermissionManager, ConfluenceUserManager confluenceUserManager) {
     this.userManager = userManager;
-    this.spaceService = spaceService;
-    this.spacePermissionDao = spacePermissionDao;
+    this.spaceManager = spaceManager;
+    this.spacePermissionManager = spacePermissionManager;
+    this.confluenceUserManager = confluenceUserManager;
   }
 
   private void validateUserIsAdmin() {
@@ -47,67 +50,60 @@ public class ScioSearchSpacePermissionsFetch {
     }
   }
 
-  private Long fetchSpaceId(String spaceKey) {
-    com.atlassian.confluence.api.model.content.Space space = spaceService.find().withKeys(spaceKey).fetchOrNull();
-    if (space == null) {
+  private String getUserEmail(String username) {
+    try {
+      return confluenceUserManager.getUser(username).getEmail();
+    } catch (EntityException e) {
+      logger.error(String.format("Error while fetching user email for user %s: %s", username, e));
       return null;
     }
-    return space.getId();
   }
 
-  private Map<String, List<String>> constructPermissionTypeToGroupsMap(List<SpacePermission> spacePermissions) {
-    // returns a map from permission type to list of groups (group names) with that permission
-    HashMap<String, List<String>> permissionToGroups = new HashMap<>();
-    for(SpacePermission spacePermission : spacePermissions) {
-      String groupName = spacePermission.getGroup();
-      if(groupName!=null){
-        permissionToGroups.getOrDefault(spacePermission.getType(), new ArrayList<>()).add(spacePermission.getGroup());
-      }
-    }
-    return permissionToGroups;
-  }
-
-  private Map<String, List<String>> constructPermissionTypeToUsersMap(List<SpacePermission> spacePermissions) {
-    // returns a map from permission type to list of users (user emails) with that permission
-    HashMap<String, List<String>> permissionToUsers = new HashMap<>();
-    for(SpacePermission spacePermission : spacePermissions) {
-      ConfluenceUser user = spacePermission.getUserSubject();
-      if(user!=null){
-        permissionToUsers.getOrDefault(spacePermission.getType(), new ArrayList<String>()).add(user.getEmail());
-      }
-    }
-    return permissionToUsers;
-  }
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public ScioSpacePermissionsResponse getPermissionsForSpace(ScioSpacePermissionsRequest request) {
-    // fetch space permissions for a given space key
-
     validateUserIsAdmin();
 
-    // we fetch permissions using the spacePermissionDao.
-    // space id is required for spacePermissionDao.getSpacePermissions, hence we fetch that first.
-    Long spaceId = fetchSpaceId(request.spaceKey);
-    if (spaceId == null) {
-      logger.debug("Space not found for key " + request.spaceKey);
-      return null;
+    // getSpace is deprecated v7.3.0 onwards, but is the only way to get this info currently,
+    // see the comments on this thread- https://community.atlassian.com/t5/Confluence-articles/Get-spaces-by-keys-with-the-Confluence-API/ba-p/1939901
+    // the thread proposes an alternate method using SpaceService which returns com.atlassian.confluence.api.model.content.Space object,
+    // but we want com.atlassian.confluence.spaces.Space object, as it has the permissions set (another way is to use SpaceDao, but plugin installation is
+    // timing out when trying to inject it).
+    // ALSO, a class part of the core package (com.atlassian.confluence.content.service.space.KeySpaceLocator) still uses getSpace!
+    Space space= this.spaceManager.getSpace(request.spaceKey);
+    if (space == null) {
+      logger.debug("Space not found for key: " + request.spaceKey);
     }
-    logger.debug("Space found for key " + request.spaceKey + " with id " + spaceId);
-    Space space = new Space(request.spaceKey);
-    space.setId(spaceId);
 
-    List<SpacePermission> spacePermissionList =  spacePermissionDao.findPermissionsForSpace(space);
-    logger.debug("Space permissions found for space " + request.spaceKey + " : " + spacePermissionList.toString());
+    ScioSpacePermissionsResponse response = new ScioSpacePermissionsResponse();
 
-    // now parse the permissions list into the required response format
-    Map<String, List<String>> permissionTypeToGroupsMap = constructPermissionTypeToGroupsMap(spacePermissionList);
-    logger.debug("Permission type to groups map for space " + request.spaceKey + " : " + permissionTypeToGroupsMap);
-    Map<String, List<String>> permissionTypeToUsersMap = constructPermissionTypeToUsersMap(spacePermissionList);
-    logger.debug("Permission type to users map for space " + request.spaceKey + " : " + permissionTypeToUsersMap);
-    final ScioSpacePermissionsResponse response = new ScioSpacePermissionsResponse();
-    response.groups = permissionTypeToGroupsMap;
-    response.users = permissionTypeToUsersMap;
+    // fetch view permissions for space
+
+    Map<String, Long> groupsAndPermissionIds =  this.spacePermissionManager.getGroupsForPermissionType(SpacePermission.VIEWSPACE_PERMISSION, space);
+    logger.debug("Groups and permission ids: " + groupsAndPermissionIds.toString());
+    List<String> groupsWithViewspacePermissions = new ArrayList<>();
+    groupsAndPermissionIds.forEach((group, permissionId) -> {
+      groupsWithViewspacePermissions.add(group);
+    });
+    logger.debug("Groups with view space permissions: " + groupsWithViewspacePermissions);
+
+    Map<String, Long> usersAndPermissionIds =  this.spacePermissionManager.getUsersForPermissionType(SpacePermission.VIEWSPACE_PERMISSION, space);
+    logger.debug("Users and permission ids: " + usersAndPermissionIds.toString());
+    List<String> usersWithViewspacePermissions = new ArrayList<>();
+    usersAndPermissionIds.forEach((user, permissionId) -> {
+      String userEmail = getUserEmail(user);
+      usersWithViewspacePermissions.add(userEmail);
+    });
+    logger.debug("Users with view space permissions: " + usersWithViewspacePermissions);
+
+    response.groups = new HashMap<String, List<String>>() {{
+      put(SpacePermission.VIEWSPACE_PERMISSION, groupsWithViewspacePermissions);
+    }};
+
+    response.users = new HashMap<String, List<String>>() {{
+      put(SpacePermission.VIEWSPACE_PERMISSION, usersWithViewspacePermissions);
+    }};
 
     return response;
   }
