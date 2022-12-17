@@ -1,5 +1,6 @@
 package com.askscio.atlassian_plugins.confluence.impl;
 
+import com.atlassian.confluence.api.model.people.Anonymous;
 import com.atlassian.confluence.security.SpacePermission;
 import com.atlassian.confluence.security.SpacePermissionManager;
 import com.atlassian.confluence.spaces.Space;
@@ -7,7 +8,9 @@ import com.atlassian.confluence.spaces.SpaceManager;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ConfluenceImport;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
+import com.atlassian.user.User;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,6 +92,12 @@ public class ScioSearchSpacePermissionsFetch {
       usersWithViewspacePermissions.add(username);
     });
     logger.debug("Users with view space permissions: " + usersWithViewspacePermissions);
+
+    // Ref: https://docs.atlassian.com/atlassian-confluence/6.5.2/com/atlassian/confluence/security/SpacePermissionManager.html#hasPermission-java.lang.String-com.atlassian.confluence.spaces.Space-com.atlassian.user.User-
+    boolean anonymousView = this.spacePermissionManager.hasPermission(SpacePermission.VIEWSPACE_PERMISSION, space, null);
+    if (anonymousView) {
+      response.anonymous = Collections.singletonList(SpacePermission.VIEWSPACE_PERMISSION);
+    }
 
     response.groups = new HashMap<String, List<String>>() {{
       put(SpacePermission.VIEWSPACE_PERMISSION, groupsWithViewspacePermissions);

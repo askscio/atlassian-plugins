@@ -8,6 +8,9 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class ScioSpacePermissionsResponse {
+  @JsonProperty("Anonymous")
+  public List<String> anonymous; // list of permission types allowed by anonymous
+
   @JsonProperty("Groups")
   public Map<String, List<String>> groups; // map from permission type to list of group names
 
