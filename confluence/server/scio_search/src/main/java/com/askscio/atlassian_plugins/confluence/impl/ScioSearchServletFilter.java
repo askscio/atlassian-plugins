@@ -69,7 +69,10 @@ public class ScioSearchServletFilter implements Filter {
     }
 
     final HttpServletRequest httpreq = (HttpServletRequest) servletRequest;
-    if (!httpreq.getRequestURI().contains("viewpage")
+    // Saving a page or blogpost fires: PUT http://bharath-test:8090/rest/api/content/65603?status=draft
+    if ("PUT".equals(httpreq.getMethod()) && httpreq.getRequestURI().startsWith("/rest/api/content/")) {
+      logger.debug("Save url: " + httpreq.getRequestURI());
+    } else if (!httpreq.getRequestURI().contains("viewpage")
         && !httpreq.getRequestURI().contains("/display/")) {
       logger.debug(String.format("Uninteresting visit: %s", httpreq.getRequestURI()));
       filterChain.doFilter(servletRequest, servletResponse);
