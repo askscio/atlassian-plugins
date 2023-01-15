@@ -137,9 +137,15 @@ public class ScioSearchServletFilter implements Filter {
 
     final URL visitUrl;
     try {
-      visitUrl =
-          new URL(
-              String.format("%s%s?%s", baseURL, httpreq.getRequestURI(), httpreq.getQueryString()));
+      String query = httpreq.getQueryString();
+      if (query == null || query.isEmpty()) {
+        visitUrl = new URL(
+          String.format("%s%s", baseURL, httpreq.getRequestURI()));
+      } else {
+        visitUrl =
+            new URL(
+                String.format("%s%s?%s", baseURL, httpreq.getRequestURI(), query));
+      }
     } catch (MalformedURLException e) {
       logger.warn(String.format("Malformed URL: %s", e.getMessage()));
       filterChain.doFilter(servletRequest, servletResponse);
