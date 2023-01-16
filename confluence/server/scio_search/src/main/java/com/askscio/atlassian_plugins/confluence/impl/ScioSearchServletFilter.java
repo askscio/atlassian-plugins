@@ -141,11 +141,11 @@ public class ScioSearchServletFilter implements Filter {
       String query = httpreq.getQueryString();
       if (query == null || query.isEmpty()) {
         visitUrl = new URL(
-          String.format("%s%s", baseURL, httpreq.getRequestURI()));
+          String.format("%s%s?glean_http_method=%s", baseURL, httpreq.getRequestURI(), httpreq.getMethod()));
       } else {
         visitUrl =
             new URL(
-                String.format("%s%s?%s", baseURL, httpreq.getRequestURI(), query));
+                String.format("%s%s?%s&glean_http_method=%s", baseURL, httpreq.getRequestURI(), query, httpreq.getMethod()));
       }
     } catch (MalformedURLException e) {
       logger.warn(String.format("Malformed URL: %s", e.getMessage()));
