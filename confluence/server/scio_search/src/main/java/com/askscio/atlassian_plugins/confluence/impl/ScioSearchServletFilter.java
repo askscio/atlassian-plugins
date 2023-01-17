@@ -69,7 +69,11 @@ public class ScioSearchServletFilter implements Filter {
     }
 
     final HttpServletRequest httpreq = (HttpServletRequest) servletRequest;
-    if (!httpreq.getRequestURI().contains("viewpage")
+    // Saving a page or blogpost fires: PUT http://confluence-server:8090/rest/api/content/65603?status=draft
+    if (httpreq.getRequestURI().startsWith("/rest/api/content/") &&
+        ("PUT".equals(httpreq.getMethod()) || "POST".equals(httpreq.getMethod()) || "DELETE".equals(httpreq.getMethod()))) {
+      logger.debug("Save url: " + httpreq.getMethod() + ": " + httpreq.getRequestURI());
+    } else if (!httpreq.getRequestURI().contains("viewpage")
         && !httpreq.getRequestURI().contains("/display/")) {
       logger.debug(String.format("Uninteresting visit: %s", httpreq.getRequestURI()));
       filterChain.doFilter(servletRequest, servletResponse);
@@ -134,9 +138,15 @@ public class ScioSearchServletFilter implements Filter {
 
     final URL visitUrl;
     try {
-      visitUrl =
-          new URL(
-              String.format("%s%s?%s", baseURL, httpreq.getRequestURI(), httpreq.getQueryString()));
+      String query = httpreq.getQueryString();
+      if (query == null || query.isEmpty()) {
+        visitUrl = new URL(
+          String.format("%s%s?glean_http_method=%s", baseURL, httpreq.getRequestURI(), httpreq.getMethod()));
+      } else {
+        visitUrl =
+            new URL(
+                String.format("%s%s?%s&glean_http_method=%s", baseURL, httpreq.getRequestURI(), query, httpreq.getMethod()));
+      }
     } catch (MalformedURLException e) {
       logger.warn(String.format("Malformed URL: %s", e.getMessage()));
       filterChain.doFilter(servletRequest, servletResponse);

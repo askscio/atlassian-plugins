@@ -7,7 +7,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.askscio.atlassian_plugins.confluence</groupId>
   <artifactId>glean_search</artifactId>
-  <version>1.1.2</version>
+  <version>1.2.1</version>
 
   <organization>
     <name>Glean</name>
