@@ -72,7 +72,7 @@ public class ScioSearchServletFilter implements Filter {
     // Saving a page or blogpost fires: PUT http://confluence-server:8090/rest/api/content/65603?status=draft
     if (httpreq.getRequestURI().startsWith("/rest/api/content/") &&
         ("PUT".equals(httpreq.getMethod()) || "POST".equals(httpreq.getMethod()) || "DELETE".equals(httpreq.getMethod()))) {
-      logger.debug("Save url: " + httpreq.getRequestURI());
+      logger.debug("Save url: " + httpreq.getMethod() + ": " + httpreq.getRequestURI());
     } else if (!httpreq.getRequestURI().contains("viewpage")
         && !httpreq.getRequestURI().contains("/display/")) {
       logger.debug(String.format("Uninteresting visit: %s", httpreq.getRequestURI()));
