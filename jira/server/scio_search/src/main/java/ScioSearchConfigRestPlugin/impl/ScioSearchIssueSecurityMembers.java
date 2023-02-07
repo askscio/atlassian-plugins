@@ -9,8 +9,6 @@ import com.atlassian.jira.issue.security.IssueSecuritySchemeManager;
 import com.atlassian.jira.issue.security.IssueSecurityLevelPermission;
 import ScioSearchConfigRestPlugin.impl.ScioIssueSecurityMembersResponse.IssueSecuritySchemeMemberInfo;
 import ScioSearchConfigRestPlugin.impl.ScioIssueSecurityMembersResponse.JiraPermissionHolderInfo;
-import ScioSearchConfigRestPlugin.impl.ScioIssueSecurityMembersResponse.AtlassianUser;
-import ScioSearchConfigRestPlugin.impl.ScioIssueSecurityMembersResponse.AtlassianGroup;
 import com.atlassian.extras.common.log.Logger;
 import com.atlassian.plugin.spring.scanner.annotation.imports.JiraImport;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
@@ -58,8 +56,8 @@ public class ScioSearchIssueSecurityMembers {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public ScioIssueSecurityMembersResponse setTarget(@QueryParam("schemeId") String schemeIdStr) {
-    logger.debug(String.format("Received request for getting issuesecuritymembers: %s", schemeIdStr));
+  public ScioIssueSecurityMembersResponse getIssueSecuritySchemeMembers(@QueryParam("schemeId") String schemeIdStr) {
+    logger.debug(String.format("Received request for getting issue security scheme members: %s", schemeIdStr));
     validateUserIsAdmin();
     Long schemeId = Long.parseLong(schemeIdStr);
 
@@ -75,55 +73,18 @@ public class ScioSearchIssueSecurityMembers {
         logger.debug(isl.getDescription() + ":" + isl.getName() + ":" + String.valueOf(isl.getId()) + ":" + String.valueOf(isl.getSchemeId()));
         List<IssueSecurityLevelPermission> issueSecurityLevelPermissions = issueSecuritySchemeManager.getPermissionsBySecurityLevel(isl.getId());
         if (issueSecurityLevels != null) {
-          response.maxResults += 1;
-          response.total += 1;
           response.values = new ArrayList();
           for (IssueSecurityLevelPermission islp : issueSecurityLevelPermissions) {
+            response.maxResults += 1;
+            response.total += 1;
             logger.debug(islp.getId() + ":" + islp.getParameter() + ":" + islp.getSchemeId() + ":" + islp.getSecurityLevelId() + ":" + islp.getType());
             IssueSecuritySchemeMemberInfo memberInfo = new IssueSecuritySchemeMemberInfo();
             memberInfo.id = String.valueOf(islp.getId());
             memberInfo.issueSecurityLevelId = String.valueOf(islp.getSecurityLevelId());
             JiraPermissionHolderInfo holder = new JiraPermissionHolderInfo();
-            holder.type = islp.getType();
             memberInfo.holder = holder;
-            switch (islp.getType()) {
-              case "applicationRole":
-                break;
-              case "user":
-                // TODO: Set accountId or name? Set active based on api call?
-                holder.user = new AtlassianUser();
-                holder.user.key = islp.getParameter();
-                holder.user.active = true;
-                break;
-              case "group":
-                // TODO: Handle deleted group issue.
-                holder.group = new AtlassianGroup();
-                holder.group.name = islp.getParameter();
-                break;
-              case "projectrole":
-                holder.type = "projectRole";            // Overwrite the type since the Jira Cloud response has this.
-                holder.parameter = islp.getParameter(); // roleId is the parameter.
-                break;
-              case "lead":
-                holder.type = "projectLead";            // Overwrite the type since the Jira Cloud response has this.
-                break;
-              case "reporter":
-                break;
-              case "assignee":
-                break;
-              case "userCF":
-                holder.type = "userCustomField";        // Overwrite the type since the Jira Cloud response has this.
-                holder.parameter = islp.getParameter(); // custom field name
-                break;
-              case "groupCF":
-                holder.type = "groupCustomField";       // Overwrite the type since the Jira Cloud response has this.
-                holder.parameter = islp.getParameter(); // custom field name
-                break;
-              case "anyone":
-              case "sd.customer.portal.only":
-              default:
-                logger.warn("Unsupported issue security level permission type: " + islp.getType());
-            }
+            holder.type = islp.getType();
+            holder.parameter = islp.getParameter();
             response.values.add(memberInfo);
           }
         }
