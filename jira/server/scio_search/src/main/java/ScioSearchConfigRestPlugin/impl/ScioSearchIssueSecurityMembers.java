@@ -101,22 +101,22 @@ public class ScioSearchIssueSecurityMembers {
                 holder.group.name = islp.getParameter();
                 break;
               case "projectrole":
-                holder.type = "projectRole";  // Overwrite the type since the Jira Cloud response has this.
+                holder.type = "projectRole";            // Overwrite the type since the Jira Cloud response has this.
                 holder.parameter = islp.getParameter(); // roleId is the parameter.
                 break;
               case "lead":
-                holder.type = "projectLead";  // Overwrite the type since the Jira Cloud response has this.
+                holder.type = "projectLead";            // Overwrite the type since the Jira Cloud response has this.
                 break;
               case "reporter":
                 break;
               case "assignee":
                 break;
-              case "userCF":  // userCustomField
-                holder.type = "userCustomField"; // Overwrite the type since the Jira Cloud response has this.
+              case "userCF":
+                holder.type = "userCustomField";        // Overwrite the type since the Jira Cloud response has this.
                 holder.parameter = islp.getParameter(); // custom field name
                 break;
-              case "groupCF": // groupCustomField
-                holder.type = "groupCustomField";    // Overwrite the type since the Jira Cloud response has this.
+              case "groupCF":
+                holder.type = "groupCustomField";       // Overwrite the type since the Jira Cloud response has this.
                 holder.parameter = islp.getParameter(); // custom field name
                 break;
               case "anyone":
