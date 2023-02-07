@@ -3,3 +3,4 @@ confluence/server/scio_search/target/
 
 */.idea/
 jira/cloud/node_modules/
+**/.DS_Store
