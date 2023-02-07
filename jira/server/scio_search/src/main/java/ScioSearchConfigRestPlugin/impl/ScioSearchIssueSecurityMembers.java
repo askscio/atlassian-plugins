@@ -68,24 +68,24 @@ public class ScioSearchIssueSecurityMembers {
     final ScioIssueSecurityMembersResponse response = new ScioIssueSecurityMembersResponse();
     response.startAt = 0;
     response.isLast = true; // no response pagination
+    response.values = new ArrayList();
     if (issueSecurityLevels != null) {
       for (IssueSecurityLevel isl : issueSecurityLevels) {
         logger.debug(isl.getDescription() + ":" + isl.getName() + ":" + String.valueOf(isl.getId()) + ":" + String.valueOf(isl.getSchemeId()));
         List<IssueSecurityLevelPermission> issueSecurityLevelPermissions = issueSecuritySchemeManager.getPermissionsBySecurityLevel(isl.getId());
         if (issueSecurityLevels != null) {
-          response.values = new ArrayList();
           for (IssueSecurityLevelPermission islp : issueSecurityLevelPermissions) {
-            response.maxResults += 1;
-            response.total += 1;
             logger.debug(islp.getId() + ":" + islp.getParameter() + ":" + islp.getSchemeId() + ":" + islp.getSecurityLevelId() + ":" + islp.getType());
+            JiraPermissionHolderInfo holder = new JiraPermissionHolderInfo();
+            holder.type = islp.getType();
+            holder.parameter = islp.getParameter();
             IssueSecuritySchemeMemberInfo memberInfo = new IssueSecuritySchemeMemberInfo();
             memberInfo.id = String.valueOf(islp.getId());
             memberInfo.issueSecurityLevelId = String.valueOf(islp.getSecurityLevelId());
-            JiraPermissionHolderInfo holder = new JiraPermissionHolderInfo();
             memberInfo.holder = holder;
-            holder.type = islp.getType();
-            holder.parameter = islp.getParameter();
             response.values.add(memberInfo);
+            response.maxResults += 1;
+            response.total += 1;
           }
         }
       }
