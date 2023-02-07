@@ -1,5 +1,6 @@
 jira/server/scio_search/target/
 confluence/server/scio_search/target/
 
-*/.idea/
+**/.idea/
 jira/cloud/node_modules/
+**/.DS_Store

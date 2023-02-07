@@ -46,7 +46,7 @@ The `target` URL will then be sent webhooks for page views. `GET` will return th
 
 To enable debug logs:
 1. Go to `Logging and Profiling` in Jira's administration settings.
-1. Add a new entry for `com.askscio.atlassian_plugins.jira.impl`
+1. Add a new entry for `ScioSearchConfigRestPlugin.impl`
 1. Set the level to:
    * `WARN` to see error messages.
    * `ALL` to see all activity, which include usernames and pages viewed.
