@@ -2,6 +2,7 @@ package ScioSearchConfigRestPlugin.impl;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+import java.util.List;
 
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class ScioIssueSecurityMembersResponse {
@@ -34,9 +35,9 @@ public class ScioIssueSecurityMembersResponse {
     public String key;
     public boolean active;
     public String accountType;
-  
+
     public String emailAddress;
-  
+
     public String displayName;
   }
   
@@ -54,6 +55,14 @@ public class ScioIssueSecurityMembersResponse {
     public static class JiraProjectRoleScope {
       public String type; // "PROJECT"
       public ProjectInfo project;
+
+      public static class ProjectInfo {
+        public String id;
+        public String name;
+        public String key;
+        public AtlassianUser lead;
+        public String style;
+      }
     }
   }
 
