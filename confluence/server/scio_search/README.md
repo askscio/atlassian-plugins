@@ -52,3 +52,5 @@ To enable debug logs:
 Logging is typically written to `/var/atlassian/application-data/confluence/logs/atlassian-confluence.log`.
 See [Atlassian's help](https://confluence.atlassian.com/doc/working-with-confluence-logs-108364721.html)
 for more details.
+
+#OPEN 1
