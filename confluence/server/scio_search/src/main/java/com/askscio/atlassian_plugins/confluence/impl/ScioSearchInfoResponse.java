@@ -1,14 +1,11 @@
 package com.askscio.atlassian_plugins.confluence.impl;
 
-import static com.askscio.atlassian_plugins.confluence.impl.MyPluginComponentImpl.LAST_WEBHOOK_FAILURE_TIME_KEY;
-import static com.askscio.atlassian_plugins.confluence.impl.MyPluginComponentImpl.LAST_WEBHOOK_RESPONSE_CODE_KEY;
-import static com.askscio.atlassian_plugins.confluence.impl.MyPluginComponentImpl.LAST_WEBHOOK_RESPONSE_TIME_KEY;
-import static com.askscio.atlassian_plugins.confluence.impl.MyPluginComponentImpl.LAST_WEBHOOK_SUCCESS_TIME_KEY;
 import static com.askscio.atlassian_plugins.confluence.impl.MyPluginComponentImpl.TARGET_CONFIG_KEY;
-import static com.askscio.atlassian_plugins.confluence.impl.Utils.getPluginSettingsValueOrElse;
 
+import com.askscio.atlassian_plugins.confluence.impl.Utils.PluginStatus;
 import com.atlassian.confluence.setup.settings.SettingsManager;
 import com.atlassian.confluence.util.GeneralUtil;
+import com.atlassian.extras.common.log.Logger;
 import com.atlassian.plugin.Plugin;
 import com.atlassian.plugin.PluginAccessor;
 import com.atlassian.plugin.PluginInformation;
@@ -25,15 +22,16 @@ import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class ScioSearchInfoResponse {
 
+  private static final Logger.Log logger = Logger.getInstance(ScioSearchInfoResponse.class);
   private final UserInfo userInfo;
   private final InstanceInfo instanceInfo;
-  private final PluginInfo pluginInfo;
+  private final ScioPluginInfo scioPluginInfo;
 
   public ScioSearchInfoResponse(UserInfo userInfo, InstanceInfo instanceInfo,
-      PluginInfo pluginInfo) {
+      ScioPluginInfo scioPluginInfo) {
     this.userInfo = userInfo;
     this.instanceInfo = instanceInfo;
-    this.pluginInfo = pluginInfo;
+    this.scioPluginInfo = scioPluginInfo;
   }
 
   @JsonAutoDetect(fieldVisibility = Visibility.ANY)
@@ -104,28 +102,25 @@ public class ScioSearchInfoResponse {
   }
 
   @JsonAutoDetect(fieldVisibility = Visibility.ANY)
-  public static class PluginInfo {
+  public static class ScioPluginInfo {
 
     private final String version;
     private final String target;
-    private final String lastWebhookResponseTime;
-    private final String lastWebhookResponseCode;
-    private final String lastWebhookSuccessTime;
-    private final String lastWebhookFailureTime;
+    private final PluginStatus pluginStatus;
 
-    public PluginInfo(PluginAccessor pluginAccessor, PluginSettingsFactory pluginSettingsFactory) {
+    public ScioPluginInfo(PluginAccessor pluginAccessor,
+        PluginSettingsFactory pluginSettingsFactory) {
       final PluginSettings pluginSettings = pluginSettingsFactory.createGlobalSettings();
-      this.version = pluginAccessor.getPlugin(Constants.PLUGIN_KEY).getPluginInformation()
-          .getVersion();
+      final Plugin plugin = pluginAccessor.getPlugin(Constants.PLUGIN_KEY);
+      if (plugin != null && plugin.getPluginInformation() != null) {
+        this.version = pluginAccessor.getPlugin(Constants.PLUGIN_KEY).getPluginInformation()
+            .getVersion();
+      } else {
+        logger.warn(String.format("Plugin version not found for %s", Constants.PLUGIN_KEY));
+        this.version = null;
+      }
       this.target = (String) pluginSettings.get(TARGET_CONFIG_KEY);
-      this.lastWebhookResponseTime = getPluginSettingsValueOrElse(pluginSettings,
-          LAST_WEBHOOK_RESPONSE_TIME_KEY, "Never fired");
-      this.lastWebhookResponseCode = getPluginSettingsValueOrElse(pluginSettings,
-          LAST_WEBHOOK_RESPONSE_CODE_KEY, "Never fired");
-      this.lastWebhookSuccessTime = getPluginSettingsValueOrElse(pluginSettings,
-          LAST_WEBHOOK_SUCCESS_TIME_KEY, "Never succeeded");
-      this.lastWebhookFailureTime = getPluginSettingsValueOrElse(pluginSettings,
-          LAST_WEBHOOK_FAILURE_TIME_KEY, "Never failed");
+      this.pluginStatus = Utils.getPluginStatus(pluginSettings);
     }
   }
 }

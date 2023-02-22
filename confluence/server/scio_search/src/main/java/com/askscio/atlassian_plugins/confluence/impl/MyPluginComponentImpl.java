@@ -4,13 +4,10 @@ import com.askscio.atlassian_plugins.confluence.api.MyPluginComponent;
 import com.atlassian.sal.api.ApplicationProperties;
 
 public class MyPluginComponentImpl implements MyPluginComponent {
+
   public static final String TARGET_CONFIG_KEY =
       "com.askscio.atlassian_plugins.confluence.targetURL";
-  public static final String LAST_WEBHOOK_RESPONSE_TIME_KEY = "com.askscio.atlassian_plugins.confluence.lastWebhookResponseTime";
-  public static final String LAST_WEBHOOK_RESPONSE_CODE_KEY = "com.askscio.atlassian_plugins.confluence.lastWebhookResponseCode";
-  public static final String LAST_WEBHOOK_SUCCESS_TIME_KEY = "com.askscio.atlassian_plugins.confluence.lastWebhookSuccessTime";
-  public static final String LAST_WEBHOOK_FAILURE_TIME_KEY = "com.askscio.atlassian_plugins.confluence.lastWebhookFailureTime";
-
+  public static final String PLUGIN_STATUS_KEY = "com.askscio.atlassian_plugins.confluence.status";
   private final ApplicationProperties applicationProperties;
 
   public MyPluginComponentImpl(final ApplicationProperties applicationProperties) {

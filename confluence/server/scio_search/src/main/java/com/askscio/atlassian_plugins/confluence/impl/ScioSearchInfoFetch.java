@@ -1,7 +1,7 @@
 package com.askscio.atlassian_plugins.confluence.impl;
 
 import com.askscio.atlassian_plugins.confluence.impl.ScioSearchInfoResponse.InstanceInfo;
-import com.askscio.atlassian_plugins.confluence.impl.ScioSearchInfoResponse.PluginInfo;
+import com.askscio.atlassian_plugins.confluence.impl.ScioSearchInfoResponse.ScioPluginInfo;
 import com.askscio.atlassian_plugins.confluence.impl.ScioSearchInfoResponse.UserInfo;
 import com.atlassian.confluence.setup.settings.SettingsManager;
 import com.atlassian.plugin.PluginAccessor;
@@ -45,7 +45,7 @@ public class ScioSearchInfoFetch {
     final UserInfo userInfo = new UserInfo(userManager);
     final InstanceInfo instanceInfo = new InstanceInfo(settingsManager, pluginAccessor, userManager,
         getInstalledPlugins);
-    final PluginInfo pluginInfo = new PluginInfo(pluginAccessor, pluginSettingsFactory);
-    return new ScioSearchInfoResponse(userInfo, instanceInfo, pluginInfo);
+    final ScioPluginInfo scioPluginInfo = new ScioPluginInfo(pluginAccessor, pluginSettingsFactory);
+    return new ScioSearchInfoResponse(userInfo, instanceInfo, scioPluginInfo);
   }
 }
