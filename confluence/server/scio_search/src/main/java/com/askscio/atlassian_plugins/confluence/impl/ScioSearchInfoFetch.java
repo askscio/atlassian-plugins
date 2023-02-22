@@ -43,7 +43,7 @@ public class ScioSearchInfoFetch {
   public ScioSearchInfoResponse getInfo(
       @QueryParam("getInstalledPlugins") boolean getInstalledPlugins) {
     final UserInfo userInfo = new UserInfo(userManager);
-    final InstanceInfo instanceInfo = new InstanceInfo(settingsManager, pluginAccessor,
+    final InstanceInfo instanceInfo = new InstanceInfo(settingsManager, pluginAccessor, userManager,
         getInstalledPlugins);
     final PluginInfo pluginInfo = new PluginInfo(pluginAccessor, pluginSettingsFactory);
     return new ScioSearchInfoResponse(userInfo, instanceInfo, pluginInfo);

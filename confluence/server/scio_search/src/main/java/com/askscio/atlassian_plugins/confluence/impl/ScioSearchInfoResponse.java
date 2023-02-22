@@ -51,7 +51,7 @@ public class ScioSearchInfoResponse {
       this.userName = profile.getUsername();
       this.fullName = profile.getFullName();
       this.email = profile.getEmail();
-      this.isAdmin = userManager.isSystemAdmin(profile.getUserKey());
+      this.isAdmin = Utils.isCurrentUserAdmin(userManager);
     }
   }
 
@@ -63,10 +63,11 @@ public class ScioSearchInfoResponse {
     private final List<InstalledPluginInfo> installedPluginInfos;
 
     public InstanceInfo(SettingsManager settingsManager, PluginAccessor pluginAccessor,
+        UserManager userManager,
         boolean getInstalledPlugins) {
       this.version = GeneralUtil.getVersionNumber();
       this.baseUrl = settingsManager.getGlobalSettings().getBaseUrl();
-      if (getInstalledPlugins) {
+      if (getInstalledPlugins && Utils.isCurrentUserAdmin(userManager)) {
         this.installedPluginInfos = new ArrayList<>();
         Collection<Plugin> installedPlugins = pluginAccessor.getPlugins();
         for (Plugin plugin : installedPlugins) {
