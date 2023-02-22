@@ -154,7 +154,8 @@ public class ScioSearchServletFilter implements Filter {
     }
     logger.debug(String.format("Visit url %s", visitUrl));
     try {
-      executor.submit(new ScioWebhookTask(target, visitUrl.toString(), user.getLowerName()));
+      executor.submit(new ScioWebhookTask(target, visitUrl.toString(), user.getLowerName(),
+          pluginSettings));
     } catch (RejectedExecutionException e) {
       logger.warn(String.format("Queue full: %s", e.getMessage()));
     }
