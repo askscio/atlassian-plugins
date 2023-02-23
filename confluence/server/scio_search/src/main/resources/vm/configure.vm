@@ -1,0 +1,17 @@
+<html>
+<head>
+    <title>Configure Scio Search Plugin</title>
+</head>
+<body>
+    <form class="aui" name="scio-search-configure-form" method="POST" action="${req.contextPath}/admin/plugins/scio_search/scio-search-do-configure.action">
+        #form_xsrfToken()
+        <h2>Target URL</h2>
+
+        <input type="text" name="target" id="target" value="$generalUtil.htmlEncode( $target )" class="text">
+
+        <input class="button submit" type="submit" value="Submit">
+
+        <div class="description">Configure target url for Scio Search plugin for sending the webhook events.</div>
+    </form>
+</body>
+</html>

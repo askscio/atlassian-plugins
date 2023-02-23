@@ -1,38 +1,56 @@
 <atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
   <plugin-info>
     <description>${project.description}</description>
-    <version>${project.version}</version>
-    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
     <param name="atlassian-data-center-status">compatible</param>
     <param name="atlassian-data-center-compatible">true</param>
     <param name="read-only-access-mode-compatible">true</param>
     <param name="plugin-type">both</param>
     <param name="plugin-icon">images/pluginIcon.png</param>
     <param name="plugin-logo">images/pluginLogo.png</param>
+    <param name="configure.url">/admin/plugins/scio_search/scio-search-configure.action</param>
+    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+    <version>${project.version}</version>
   </plugin-info>
 
   <!-- add our i18n resource -->
-  <resource type="i18n" name="i18n" location="scio_search"/>
+  <resource location="scio_search" name="i18n" type="i18n"/>
 
   <!-- add our web resources -->
-  <web-resource key="scio_search-resources" name="scio_search Web Resources">
-    <dependency>com.atlassian.auiplugin:ajs</dependency>
-
-    <resource type="download" name="scio_search.css" location="/css/scio_search.css"/>
-    <resource type="download" name="scio_search.js" location="/js/scio_search.js"/>
-    <resource type="download" name="images/" location="/images"/>
-
-    <context>scio_search</context>
-  </web-resource>
-
-  <servlet-filter key="scioSearchServletFilter"
-    class="com.askscio.atlassian_plugins.confluence.impl.ScioSearchServletFilter">
-    <description>Updates Scio ranking signals based on URLs visited.</description>
-    <url-pattern>*</url-pattern>
-  </servlet-filter>
-
   <rest key="scioSearchConfigRest" path="/scio_search" version="1.0">
     <description>Provides Scio Search plugin configuration endpoint.</description>
   </rest>
 
+  <servlet-filter class="com.askscio.atlassian_plugins.confluence.impl.ScioSearchServletFilter"
+    key="scioSearchServletFilter">
+    <description>Updates Scio ranking signals based on URLs visited.</description>
+    <url-pattern>*</url-pattern>
+  </servlet-filter>
+
+
+  <web-resource key="scio_search-resources" name="scio_search Web Resources">
+    <context>scio_search</context>
+
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <resource location="/js/scio_search.js" name="scio_search.js" type="download"/>
+    <resource location="/images" name="images/" type="download"/>
+
+    <resource location="/css/scio_search.css" name="scio_search.css" type="download"/>
+  </web-resource>
+
+  <xwork key="scio-search-config-action" name="Scio Search Config Action">
+    <package extends="default" name="Scio Search Config Action Package"
+      namespace="/admin/plugins/scio_search">
+      <action class="com.askscio.atlassian_plugins.confluence.impl.ScioSearchConfigAction"
+        method="doDefault" name="scio-search-configure">
+        <interceptor-ref name="defaultStack"/>
+        <result name="input" type="velocity">/vm/configure.vm</result>
+      </action>
+      <action class="com.askscio.atlassian_plugins.confluence.impl.ScioSearchConfigAction"
+        method="execute" name="scio-search-do-configure">
+        <interceptor-ref name="validatingStack"/>
+        <param name="RequireSecurityToken">true</param>
+        <result name="success" type="velocity">/vm/configure.vm</result>
+      </action>
+    </package>
+  </xwork>
 </atlassian-plugin>
