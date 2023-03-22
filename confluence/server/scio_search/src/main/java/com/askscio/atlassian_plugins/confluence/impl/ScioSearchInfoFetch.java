@@ -13,7 +13,6 @@ import javax.inject.Named;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 @Named
@@ -40,11 +39,9 @@ public class ScioSearchInfoFetch {
 
   @GET
   @Produces({MediaType.APPLICATION_JSON})
-  public ScioSearchInfoResponse getInfo(
-      @QueryParam("getInstalledPlugins") boolean getInstalledPlugins) {
+  public ScioSearchInfoResponse getInfo() {
     final UserInfo userInfo = new UserInfo(userManager);
-    final InstanceInfo instanceInfo = new InstanceInfo(settingsManager, pluginAccessor, userManager,
-        getInstalledPlugins);
+    final InstanceInfo instanceInfo = new InstanceInfo(settingsManager);
     final ScioPluginInfo scioPluginInfo = new ScioPluginInfo(pluginAccessor, pluginSettingsFactory);
     return new ScioSearchInfoResponse(userInfo, instanceInfo, scioPluginInfo);
   }

@@ -2,10 +2,14 @@ package com.askscio.atlassian_plugins.confluence.impl;
 
 import static com.askscio.atlassian_plugins.confluence.impl.MyPluginComponentImpl.TARGET_CONFIG_KEY;
 
+import com.askscio.atlassian_plugins.confluence.impl.Utils.PluginSettingsCacheLoader;
+import com.atlassian.cache.Cache;
+import com.atlassian.cache.CacheManager;
 import com.atlassian.confluence.setup.settings.Settings;
 import com.atlassian.confluence.setup.settings.SettingsManager;
 import com.atlassian.confluence.user.AuthenticatedUserThreadLocal;
 import com.atlassian.confluence.user.ConfluenceUser;
+import com.atlassian.extras.common.log.Logger;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ConfluenceImport;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
@@ -13,6 +17,7 @@ import com.atlassian.spring.container.ContainerManager;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
@@ -27,7 +32,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import com.atlassian.extras.common.log.Logger;
 
 @Named
 public class ScioSearchServletFilter implements Filter {
@@ -37,7 +41,6 @@ public class ScioSearchServletFilter implements Filter {
   private static final int BASE_URL_MIN_PREFIX = "https://".length() + 1;
 
   private static final Logger.Log logger = Logger.getInstance(ScioSearchServletFilter.class);
-
   private final ExecutorService executor =
       new ThreadPoolExecutor(
           NUM_BACKGROUND_THREADS,
@@ -46,11 +49,17 @@ public class ScioSearchServletFilter implements Filter {
           TimeUnit.MILLISECONDS,
           new LinkedBlockingQueue<>(MAX_OUTSTANDING_REQUESTS));
 
-  @ConfluenceImport private final PluginSettingsFactory pluginSettingsFactory;
+  @ConfluenceImport
+  private final PluginSettingsFactory pluginSettingsFactory;
+
+  private final Cache<String, Optional<String>> pluginSettingsCache;
 
   @Inject
-  public ScioSearchServletFilter(final PluginSettingsFactory pluginSettingsFactory) {
+  public ScioSearchServletFilter(final PluginSettingsFactory pluginSettingsFactory,
+      @ConfluenceImport final CacheManager cacheManager) {
     this.pluginSettingsFactory = pluginSettingsFactory;
+    this.pluginSettingsCache = cacheManager.getCache(getClass().getName() + ".pluginSettingsCache",
+        new PluginSettingsCacheLoader(pluginSettingsFactory.createGlobalSettings()));
   }
 
   @Override
@@ -71,7 +80,8 @@ public class ScioSearchServletFilter implements Filter {
     final HttpServletRequest httpreq = (HttpServletRequest) servletRequest;
     // Saving a page or blogpost fires: PUT http://confluence-server:8090/rest/api/content/65603?status=draft
     if (httpreq.getRequestURI().startsWith("/rest/api/content/") &&
-        ("PUT".equals(httpreq.getMethod()) || "POST".equals(httpreq.getMethod()) || "DELETE".equals(httpreq.getMethod()))) {
+        ("PUT".equals(httpreq.getMethod()) || "POST".equals(httpreq.getMethod()) || "DELETE".equals(
+            httpreq.getMethod()))) {
       logger.debug("Save url: " + httpreq.getMethod() + ": " + httpreq.getRequestURI());
     } else if (!httpreq.getRequestURI().contains("viewpage")
         && !httpreq.getRequestURI().contains("/display/")) {
@@ -141,11 +151,13 @@ public class ScioSearchServletFilter implements Filter {
       String query = httpreq.getQueryString();
       if (query == null || query.isEmpty()) {
         visitUrl = new URL(
-          String.format("%s%s?glean_http_method=%s", baseURL, httpreq.getRequestURI(), httpreq.getMethod()));
+            String.format("%s%s?glean_http_method=%s", baseURL, httpreq.getRequestURI(),
+                httpreq.getMethod()));
       } else {
         visitUrl =
             new URL(
-                String.format("%s%s?%s&glean_http_method=%s", baseURL, httpreq.getRequestURI(), query, httpreq.getMethod()));
+                String.format("%s%s?%s&glean_http_method=%s", baseURL, httpreq.getRequestURI(),
+                    query, httpreq.getMethod()));
       }
     } catch (MalformedURLException e) {
       logger.warn(String.format("Malformed URL: %s", e.getMessage()));
@@ -155,7 +167,7 @@ public class ScioSearchServletFilter implements Filter {
     logger.debug(String.format("Visit url %s", visitUrl));
     try {
       executor.submit(new ScioWebhookTask(target, visitUrl.toString(), user.getLowerName(),
-          pluginSettings));
+          pluginSettings, pluginSettingsCache));
     } catch (RejectedExecutionException e) {
       logger.warn(String.format("Queue full: %s", e.getMessage()));
     }

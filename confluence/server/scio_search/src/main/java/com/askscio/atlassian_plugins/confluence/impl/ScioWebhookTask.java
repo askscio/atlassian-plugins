@@ -1,11 +1,13 @@
 package com.askscio.atlassian_plugins.confluence.impl;
 
+import com.atlassian.cache.Cache;
 import com.atlassian.extras.common.log.Logger;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 public class ScioWebhookTask implements Runnable {
 
@@ -15,13 +17,15 @@ public class ScioWebhookTask implements Runnable {
   private final String visitedUrl;
   private final String user;
   private final PluginSettings pluginSettings;
+  private final Cache<String, Optional<String>> pluginSettingsCache;
 
   public ScioWebhookTask(String target, String visitedUrl, String user,
-      PluginSettings pluginSettings) {
+      PluginSettings pluginSettings, Cache<String, Optional<String>> pluginSettingsCache) {
     this.target = target;
     this.visitedUrl = visitedUrl;
     this.user = user;
     this.pluginSettings = pluginSettings;
+    this.pluginSettingsCache = pluginSettingsCache;
   }
 
   @Override
@@ -38,7 +42,7 @@ public class ScioWebhookTask implements Runnable {
       output.write(bytes);
       int responseCode = connection.getResponseCode();
       try {
-        Utils.updatePluginStatus(pluginSettings, responseCode);
+        Utils.updatePluginStatus(pluginSettingsCache, pluginSettings, responseCode);
       } catch (Exception e) {
         logger.warn(String.format("Exception while updating plugin status: %s", e));
       }

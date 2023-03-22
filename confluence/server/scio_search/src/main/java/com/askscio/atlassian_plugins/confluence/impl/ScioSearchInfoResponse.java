@@ -8,14 +8,10 @@ import com.atlassian.confluence.util.GeneralUtil;
 import com.atlassian.extras.common.log.Logger;
 import com.atlassian.plugin.Plugin;
 import com.atlassian.plugin.PluginAccessor;
-import com.atlassian.plugin.PluginInformation;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 
@@ -58,46 +54,10 @@ public class ScioSearchInfoResponse {
 
     private final String version;
     private final String baseUrl;
-    private final List<InstalledPluginInfo> installedPluginInfos;
 
-    public InstanceInfo(SettingsManager settingsManager, PluginAccessor pluginAccessor,
-        UserManager userManager,
-        boolean getInstalledPlugins) {
+    public InstanceInfo(SettingsManager settingsManager) {
       this.version = GeneralUtil.getVersionNumber();
       this.baseUrl = settingsManager.getGlobalSettings().getBaseUrl();
-      if (getInstalledPlugins && Utils.isCurrentUserAdmin(userManager)) {
-        this.installedPluginInfos = new ArrayList<>();
-        Collection<Plugin> installedPlugins = pluginAccessor.getPlugins();
-        for (Plugin plugin : installedPlugins) {
-          InstalledPluginInfo installedPluginInfo = new InstalledPluginInfo(pluginAccessor, plugin);
-          this.installedPluginInfos.add(installedPluginInfo);
-        }
-      } else {
-        this.installedPluginInfos = null;
-      }
-    }
-
-    @JsonAutoDetect(fieldVisibility = Visibility.ANY)
-    public static class InstalledPluginInfo {
-
-      private final String name;
-      private final String key;
-      private final String description;
-      private final String vendorName;
-      private final String vendorUrl;
-      private final String version;
-      private final boolean isEnabled;
-
-      public InstalledPluginInfo(PluginAccessor accessor, Plugin plugin) {
-        PluginInformation pluginInformation = plugin.getPluginInformation();
-        this.name = plugin.getName();
-        this.key = plugin.getKey();
-        this.description = pluginInformation.getDescription();
-        this.vendorName = pluginInformation.getVendorName();
-        this.vendorUrl = pluginInformation.getVendorUrl();
-        this.version = pluginInformation.getVersion();
-        this.isEnabled = accessor.isPluginEnabled(plugin.getKey());
-      }
     }
   }
 
