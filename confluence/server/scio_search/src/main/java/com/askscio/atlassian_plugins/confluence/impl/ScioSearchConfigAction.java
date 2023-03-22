@@ -7,6 +7,8 @@ import com.atlassian.confluence.security.SpacePermission;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.atlassian.sal.api.websudo.WebSudoRequired;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 @WebSudoRequired
@@ -45,7 +47,19 @@ public class ScioSearchConfigAction extends ConfluenceActionSupport {
 
   public String execute() throws Exception {
     PluginSettings pluginSettings = pluginSettingsFactory.createGlobalSettings();
+    String targetUrl = getTarget();
+    if (targetUrl == null || targetUrl.isEmpty()) {
+      addFieldError("scio_search.target", "Target URL is required", null);
+      return ConfluenceActionSupport.ERROR;
+    }
+    try {
+      new URL(targetUrl);
+    } catch (MalformedURLException e) {
+      addFieldError("scio_search.target", "Invalid target URL", null);
+      return ConfluenceActionSupport.ERROR;
+    }
     pluginSettings.put(TARGET_CONFIG_KEY, getTarget());
+    addActionMessage("Target URL updated to " + targetUrl);
     return ConfluenceActionSupport.SUCCESS;
   }
 }

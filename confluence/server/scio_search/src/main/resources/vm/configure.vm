@@ -1,3 +1,5 @@
+#requireResource("com.atlassian.auiplugin:aui-message")
+
 <html>
 <head>
     <title>Configure Scio Search Plugin</title>
@@ -12,6 +14,13 @@
         <input class="button submit" type="submit" value="Submit">
 
         <div class="description">Configure target url for Scio Search plugin for sending the webhook events.</div>
+        #foreach ($error in $fieldErrors.get("scio_search.target")) <div class="error">$error</div> #end
     </form>
+
+    #if($actionMessages.size() > 0)
+        <div class="aui-message aui-message-success">
+            <p>#foreach($message in $actionMessages) $message<br/> #end</p>
+        </div>
+    #end
 </body>
 </html>

@@ -50,6 +50,7 @@
         <interceptor-ref name="validatingStack"/>
         <param name="RequireSecurityToken">true</param>
         <result name="success" type="velocity">/vm/configure.vm</result>
+        <result name="error" type="velocity">/vm/configure.vm</result>
       </action>
     </package>
   </xwork>
