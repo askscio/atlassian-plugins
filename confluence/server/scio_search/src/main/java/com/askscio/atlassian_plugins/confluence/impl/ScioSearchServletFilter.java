@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
@@ -41,6 +42,8 @@ public class ScioSearchServletFilter implements Filter {
   private static final int BASE_URL_MIN_PREFIX = "https://".length() + 1;
 
   private static final Logger.Log logger = Logger.getInstance(ScioSearchServletFilter.class);
+  private static final Set<String> ALLOWED_REST_API_CONTENT_ACTIONS = Set.of("PUT", "POST",
+      "DELETE");
   private final ExecutorService executor =
       new ThreadPoolExecutor(
           NUM_BACKGROUND_THREADS,
@@ -48,10 +51,10 @@ public class ScioSearchServletFilter implements Filter {
           0L,
           TimeUnit.MILLISECONDS,
           new LinkedBlockingQueue<>(MAX_OUTSTANDING_REQUESTS));
-
   @ConfluenceImport
   private final PluginSettingsFactory pluginSettingsFactory;
-
+  // It is not clear if atlassian cache is thread safe - since the executor thread pool has only 1
+  // thread, we are okay.
   private final Cache<String, Optional<String>> pluginSettingsCache;
 
   @Inject
@@ -80,9 +83,12 @@ public class ScioSearchServletFilter implements Filter {
     final HttpServletRequest httpreq = (HttpServletRequest) servletRequest;
     // Saving a page or blogpost fires: PUT http://confluence-server:8090/rest/api/content/65603?status=draft
     if (httpreq.getRequestURI().startsWith("/rest/api/content/") &&
-        ("PUT".equals(httpreq.getMethod()) || "POST".equals(httpreq.getMethod()) || "DELETE".equals(
-            httpreq.getMethod()))) {
-      logger.debug("Save url: " + httpreq.getMethod() + ": " + httpreq.getRequestURI());
+        ALLOWED_REST_API_CONTENT_ACTIONS.contains(httpreq.getMethod())) {
+      if ("DELETE".equals(httpreq.getMethod())) {
+        logger.debug("Delete url: " + httpreq.getMethod() + ": " + httpreq.getRequestURI());
+      } else {
+        logger.debug("Save url: " + httpreq.getMethod() + ": " + httpreq.getRequestURI());
+      }
     } else if (!httpreq.getRequestURI().contains("viewpage")
         && !httpreq.getRequestURI().contains("/display/")) {
       logger.debug(String.format("Uninteresting visit: %s", httpreq.getRequestURI()));
