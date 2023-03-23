@@ -1,12 +1,13 @@
 package com.askscio.atlassian_plugins.confluence.impl;
 
 import static com.askscio.atlassian_plugins.confluence.impl.MyPluginComponentImpl.TARGET_CONFIG_KEY;
+import static com.askscio.atlassian_plugins.confluence.impl.Utils.validateUserIsAdmin;
 
+import com.atlassian.extras.common.log.Logger;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ConfluenceImport;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.atlassian.sal.api.user.UserManager;
-import com.atlassian.sal.api.user.UserProfile;
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.inject.Inject;
@@ -17,7 +18,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import com.atlassian.extras.common.log.Logger;
 
 @Named
 @Path("/configure")
@@ -25,27 +25,22 @@ public class ScioSearchConfigRestPlugin {
 
   private static final Logger.Log logger = Logger.getInstance(ScioSearchConfigRestPlugin.class);
 
-  @ConfluenceImport private final UserManager userManager;
-  @ConfluenceImport private final PluginSettingsFactory pluginSettingsFactory;
+  @ConfluenceImport
+  private final UserManager userManager;
+  @ConfluenceImport
+  private final PluginSettingsFactory pluginSettingsFactory;
 
   @Inject
-  public ScioSearchConfigRestPlugin(
-      UserManager userManager, PluginSettingsFactory pluginSettingsFactory) {
+  public ScioSearchConfigRestPlugin(UserManager userManager,
+      PluginSettingsFactory pluginSettingsFactory) {
     this.userManager = userManager;
     this.pluginSettingsFactory = pluginSettingsFactory;
-  }
-
-  private void validateUserIsAdmin() {
-    final UserProfile profile = userManager.getRemoteUser();
-    if (profile == null || !userManager.isSystemAdmin(profile.getUserKey())) {
-      throw new UnauthorizedException("Unauthorized");
-    }
   }
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public ScioConfigResponse getTarget() {
-    validateUserIsAdmin();
+    validateUserIsAdmin(userManager);
     final PluginSettings pluginSettings = pluginSettingsFactory.createGlobalSettings();
     final String target = (String) pluginSettings.get(TARGET_CONFIG_KEY);
     final ScioConfigResponse response = new ScioConfigResponse();
@@ -57,7 +52,7 @@ public class ScioSearchConfigRestPlugin {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public ScioConfigResponse setTarget(ScioConfigRequest request) {
-    validateUserIsAdmin();
+    validateUserIsAdmin(userManager);
     try {
       new URL(request.getTarget());
     } catch (MalformedURLException e) {
