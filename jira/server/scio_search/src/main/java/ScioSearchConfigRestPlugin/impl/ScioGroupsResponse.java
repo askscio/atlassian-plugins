@@ -9,12 +9,12 @@ public class ScioGroupsResponse {
   public String header;
   public List<JiraGroup> groups;
 
-  public class JiraGroup {
+  public static class JiraGroup {
     public String name;
     public List<JiraGroupLabel> labels;
   }
 
-  public class JiraGroupLabel {
+  public static class JiraGroupLabel {
     public String text;
     public String title;
     public String type;
