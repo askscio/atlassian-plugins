@@ -21,7 +21,7 @@ import javax.ws.rs.core.MediaType;
 public class ScioSearchInfo {
   @JiraImport
   private final UserManager userManager;
-  // Ref: https://docs.atlassian.com/software/jira/docs/api/7.6.1/com/atlassian/jira/issue/fields/rest/json/beans/JiraBaseUrls.html
+  // Ref: https://docs.atlassian.com/software/jira/docs/api/7.6.1/com/atlassian/jira/config/properties/ApplicationProperties.html
   @JiraImport
   private final ApplicationProperties applicationProperties;
   // Ref: https://docs.atlassian.com/software/jira/docs/api/7.6.1/com/atlassian/jira/util/BuildUtilsInfo.html
