@@ -7,6 +7,7 @@ import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 public class ScioSearchInfoResponse {
   public UserInfo userInfo;
   public InstanceInfo instanceInfo;
+  public ScioPluginInfo scioPluginInfo;
 
   @JsonAutoDetect(fieldVisibility = Visibility.ANY)
   public static class UserInfo {
@@ -19,7 +20,13 @@ public class ScioSearchInfoResponse {
 
   @JsonAutoDetect(fieldVisibility = Visibility.ANY)
   public static class InstanceInfo {
-    String version;
-    String baseUrl;
+    public String version;
+    public String baseUrl;
+  }
+
+  @JsonAutoDetect(fieldVisibility = Visibility.ANY)
+  public static class ScioPluginInfo {
+    public String version;
+    public String target;
   }
 }
