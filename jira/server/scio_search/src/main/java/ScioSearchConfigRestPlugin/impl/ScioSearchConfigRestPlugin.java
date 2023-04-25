@@ -36,17 +36,10 @@ public class ScioSearchConfigRestPlugin {
     this.pluginSettingsFactory = pluginSettingsFactory;
   }
 
-  private void validateUserIsAdmin() {
-    final UserProfile profile = userManager.getRemoteUser();
-    if (profile == null || !userManager.isSystemAdmin(profile.getUserKey())) {
-      throw new UnauthorizedException("Unauthorized");
-    }
-  }
-
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public ScioConfigResponse getTarget() {
-    validateUserIsAdmin();
+    Utils.validateUserIsAdmin(userManager);
     final PluginSettings pluginSettings = pluginSettingsFactory.createGlobalSettings();
     final String target = (String) pluginSettings.get(TARGET_CONFIG_KEY);
     final ScioConfigResponse response = new ScioConfigResponse();
@@ -59,7 +52,7 @@ public class ScioSearchConfigRestPlugin {
   @Consumes(MediaType.APPLICATION_JSON)
   public ScioConfigResponse setTarget(ScioConfigRequest request) {
     logger.debug(String.format("Received request for setting target url: %s", request.getTarget()));
-    validateUserIsAdmin();
+    Utils.validateUserIsAdmin(userManager);
     try {
       new URL(request.getTarget());
     } catch (MalformedURLException e) {
