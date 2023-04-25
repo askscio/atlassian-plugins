@@ -1,7 +1,9 @@
 package ScioSearchConfigRestPlugin.impl;
 
+import ScioSearchConfigRestPlugin.impl.ScioSearchInfoResponse.InstanceInfo;
 import ScioSearchConfigRestPlugin.impl.ScioSearchInfoResponse.UserInfo;
 import com.atlassian.jira.config.properties.ApplicationProperties;
+import com.atlassian.jira.util.BuildUtilsInfo;
 import com.atlassian.plugin.PluginAccessor;
 import com.atlassian.plugin.spring.scanner.annotation.imports.JiraImport;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
@@ -19,10 +21,19 @@ import javax.ws.rs.core.MediaType;
 public class ScioSearchInfo {
   @JiraImport
   private final UserManager userManager;
+  // Ref: https://docs.atlassian.com/software/jira/docs/api/7.6.1/com/atlassian/jira/issue/fields/rest/json/beans/JiraBaseUrls.html
+  @JiraImport
+  private final ApplicationProperties applicationProperties;
+  // Ref: https://docs.atlassian.com/software/jira/docs/api/7.6.1/com/atlassian/jira/util/BuildUtilsInfo.html
+  @JiraImport
+  private final BuildUtilsInfo buildUtilsInfo;
 
   @Inject
-  public ScioSearchInfo(UserManager userManager) {
+  public ScioSearchInfo(UserManager userManager, ApplicationProperties applicationProperties,
+      BuildUtilsInfo buildUtilsInfo) {
     this.userManager = userManager;
+    this.applicationProperties = applicationProperties;
+    this.buildUtilsInfo = buildUtilsInfo;
   }
 
   private UserInfo getUserInfo() {
@@ -36,11 +47,19 @@ public class ScioSearchInfo {
     return userInfo;
   }
 
+  private InstanceInfo getInstanceInfo() {
+    InstanceInfo instanceInfo = new InstanceInfo();
+    instanceInfo.baseUrl = applicationProperties.getDefaultBackedString("jira.baseurl");
+    instanceInfo.version = buildUtilsInfo.getVersion();
+    return instanceInfo;
+  }
+
   @GET
   @Produces({MediaType.APPLICATION_JSON})
   public ScioSearchInfoResponse getInfo() {
     ScioSearchInfoResponse response = new ScioSearchInfoResponse();
     response.userInfo = getUserInfo();
+    response.instanceInfo = getInstanceInfo();
     return response;
   }
 }
