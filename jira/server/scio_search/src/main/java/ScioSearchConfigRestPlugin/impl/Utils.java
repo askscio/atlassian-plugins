@@ -6,7 +6,7 @@ import com.atlassian.sal.api.user.UserProfile;
 public class Utils {
   public static boolean isCurrentUserAdmin(UserManager userManager) {
     final UserProfile profile = userManager.getRemoteUser();
-    return profile != null && userManager.isSystemAdmin(profile.getUserKey());
+    return profile != null && userManager.isAdmin(profile.getUserKey());
   }
 
   public static void validateUserIsAdmin(UserManager userManager) {

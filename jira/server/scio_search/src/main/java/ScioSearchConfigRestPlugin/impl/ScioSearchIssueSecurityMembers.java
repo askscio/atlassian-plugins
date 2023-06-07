@@ -47,18 +47,11 @@ public class ScioSearchIssueSecurityMembers {
     this.pluginSettingsFactory = pluginSettingsFactory;
   }
 
-  private void validateUserIsAdmin() {
-    final UserProfile profile = userManager.getRemoteUser();
-    if (profile == null || !userManager.isSystemAdmin(profile.getUserKey())) {
-      throw new UnauthorizedException("Unauthorized");
-    }
-  }
-
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public ScioIssueSecurityMembersResponse getIssueSecuritySchemeMembers(@QueryParam("schemeId") String schemeIdStr) {
     logger.debug(String.format("Received request for getting issue security scheme members: %s", schemeIdStr));
-    validateUserIsAdmin();
+    Utils.validateUserIsAdmin(userManager);
     Long schemeId = Long.parseLong(schemeIdStr);
 
     final IssueSecurityLevelManager issueSecurityLevelManager = ComponentAccessor.getIssueSecurityLevelManager();
