@@ -10,6 +10,9 @@
     <param name="configure.url">/admin/plugins/scio_search/scio-search-configure.action</param>
     <vendor name="${project.organization.name}" url="${project.organization.url}"/>
     <version>${project.version}</version>
+    <bundle-instructions>
+      <Import-Package>com.askscio,*;resolution:=optional</Import-Package>
+    </bundle-instructions>
   </plugin-info>
 
   <!-- add our i18n resource -->
