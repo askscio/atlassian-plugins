@@ -28,6 +28,8 @@ public class ScioWebhookTask implements Runnable {
       connection.setRequestMethod("POST");
       connection.setRequestProperty("Content-type", "application/json; charset=utf-8");
       connection.setDoOutput(true);
+      connection.setConnectTimeout(60000);
+      connection.setReadTimeout(60000);
       final OutputStream output = connection.getOutputStream();
       final String json = String.format("{\"url\":\"%s\",\"user\":\"%s\",\"webhookEvent\":\"VIEW\"}", visitedUrl, user);
       final byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
