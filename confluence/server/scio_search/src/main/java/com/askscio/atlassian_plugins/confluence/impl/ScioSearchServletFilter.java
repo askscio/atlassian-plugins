@@ -17,6 +17,8 @@ import com.atlassian.spring.container.ContainerManager;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -42,8 +44,7 @@ public class ScioSearchServletFilter implements Filter {
   private static final int BASE_URL_MIN_PREFIX = "https://".length() + 1;
 
   private static final Logger.Log logger = Logger.getInstance(ScioSearchServletFilter.class);
-  private static final Set<String> ALLOWED_REST_API_CONTENT_ACTIONS = Set.of("PUT", "POST",
-      "DELETE");
+  private static final Set<String> ALLOWED_REST_API_CONTENT_ACTIONS = new HashSet<>(Arrays.asList("PUT", "POST", "DELETE"));
   private final ExecutorService executor =
       new ThreadPoolExecutor(
           NUM_BACKGROUND_THREADS,
