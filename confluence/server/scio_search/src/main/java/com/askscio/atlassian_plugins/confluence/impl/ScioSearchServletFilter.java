@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Optional;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -42,8 +43,7 @@ public class ScioSearchServletFilter implements Filter {
   private static final int BASE_URL_MIN_PREFIX = "https://".length() + 1;
 
   private static final Logger.Log logger = Logger.getInstance(ScioSearchServletFilter.class);
-  private static final Set<String> ALLOWED_REST_API_CONTENT_ACTIONS = Set.of("PUT", "POST",
-      "DELETE");
+  private static final Set<String> ALLOWED_REST_API_CONTENT_ACTIONS = getAllowedRestApiContentActions();
   private final ExecutorService executor =
       new ThreadPoolExecutor(
           NUM_BACKGROUND_THREADS,
@@ -63,6 +63,14 @@ public class ScioSearchServletFilter implements Filter {
     this.pluginSettingsFactory = pluginSettingsFactory;
     this.pluginSettingsCache = cacheManager.getCache(getClass().getName() + ".pluginSettingsCache",
         new PluginSettingsCacheLoader(pluginSettingsFactory.createGlobalSettings()));
+  }
+
+  private static Set<String> getAllowedRestApiContentActions() {
+      final Set<String> actions = new HashSet<String>();
+      actions.add("PUT");
+      actions.add("POST");
+      actions.add("DELETE");
+      return actions;
   }
 
   @Override
