@@ -5,7 +5,7 @@
     <title>Configure Scio Search Plugin</title>
 </head>
 <body>
-    <form class="aui" name="scio-search-configure-form" method="POST" action="${req.contextPath}/admin/plugins/scio_search/scio-search-do-configure.action">
+    <form class="aui" name="scio-search-configure-form" method="POST" action="${req.contextPath}/admin/plugins/scio-search/scio-search-do-configure.action">
         #form_xsrfToken()
         <h2>Target URL</h2>
 

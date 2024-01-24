@@ -7,7 +7,7 @@
     <param name="plugin-type">both</param>
     <param name="plugin-icon">images/pluginIcon.png</param>
     <param name="plugin-logo">images/pluginLogo.png</param>
-    <param name="configure.url">/admin/plugins/scio_search/scio-search-configure.action</param>
+    <param name="configure.url">/admin/plugins/scio-search/scio-search-configure.action</param>
     <vendor name="${project.organization.name}" url="${project.organization.url}"/>
     <version>${project.version}</version>
     <bundle-instructions>
@@ -42,7 +42,7 @@
 
   <xwork key="scio-search-config-action" name="Scio Search Config Action">
     <package extends="default" name="Scio Search Config Action Package"
-      namespace="/admin/plugins/scio_search">
+      namespace="/admin/plugins/scio-search">
       <action class="com.askscio.atlassian_plugins.confluence.impl.ScioSearchConfigAction"
         method="doDefault" name="scio-search-configure">
         <interceptor-ref name="defaultStack"/>
