@@ -1,0 +1,65 @@
+<html>
+   <head>
+      <title>Configure Glean Search Plugin</title>
+   </head>
+   <body>
+      <div style="background: #FFFFFF">
+         <table class="jiraform maxWidth">
+            <tr>
+               <td class="jiraformheader">
+                  <h3 class="formtitle">Configure Glean Search Plugin</h3>
+               </td>
+            </tr>
+         </table>
+         <br>
+         <form id="scio-search-configure-form" method="post" action="${req.contextPath}/secure/ScioSearchConfigAction.jspa">
+            <table class="grid" border="0">
+               <tr>
+                  <td align="fieldLabelArea">
+                     Target URL:&nbsp;
+                  </td>
+                  <td class="fieldValueArea">
+                     <input type="text"
+                        id="target"
+                        name="target"
+                        value="$textutils.htmlEncode(${target})"
+                        size="60"
+                        />
+                     <br>
+                     <font size="1">Target url for Glean Search plugin for sending the webhook events.</font>
+                  </td>
+               </tr>
+               <tr>
+                  <td class="fullyCentered jiraformfooter">
+                     <input type="submit" name="Submit" id="Submit" value="Submit&nbsp;&gt;&gt;"
+                        accesskey="S"
+                        title="Press Ctrl+S to submit form"
+                        class="spaced"
+                        />
+                  </td>
+                  <td class="fullyCentered jiraformfooter">
+                     <input type="hidden" name="cancelUrl" value="${req.contextPath}/secure/Dashboard.jspa"/>
+                     <input type="submit" name="Cancel" id="Cancel" value="Cancel"
+                        accesskey="`"
+                        title="Press Alt+` to cancel form"
+                        class="spaced"
+                        />
+                  </td>
+               </tr>
+            </table>
+         </form>
+         #if (${hasErrorMessages})
+         <table>
+            <tr>
+               <td><b>Failed to configure the plugin</b></td>
+            </tr>
+            #foreach ($error in $action.getErrorMessages())
+            <tr>
+               <td>${error}</td>
+            </tr>
+            #end
+         </table>
+         #end
+      </div>
+   </body>
+</html>
