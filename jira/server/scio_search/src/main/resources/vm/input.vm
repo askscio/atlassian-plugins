@@ -26,7 +26,7 @@
                         size="60"
                         />
                      <br>
-                     <font size="1">Target url for Glean Search plugin for sending the webhook events.</font>
+                     <font size="1">Target url for Glean Search plugin for sending the view events.</font>
                   </td>
                </tr>
                <tr>
