@@ -38,4 +38,26 @@
     <description>Provides Scio Search plugin configuration endpoint.</description>
   </rest>
 
+  <webwork1 key="scio-search-config-actions" name="Scio Search Config Actions" class="java.lang.Object" roles-required="admin" >
+    <actions>
+      <action name="ScioSearchConfigRestPlugin.impl.ScioSearchConfigAction" alias="ScioSearchConfigAction">
+        <view name="success">/vm/success.vm</view>
+        <view name="input">/vm/input.vm</view>
+      </action>
+    </actions>
+  </webwork1>
+
+  <web-section key="scio-search-config-section"
+               name="Scio Search Config Section"
+               location="system.admin"
+               weight="110">
+    <description>Scio Search Config Section</description>
+    <label key="scio_search.config.section.name"/>
+  </web-section>
+
+  <web-item key="scio-search-config-action" name="Scio Search Config Action" section="system.admin/scio-search-config-section" weight="10">
+    <label key="scio_search.config.action.name"/>
+    <link>/secure/ScioSearchConfigAction!default.jspa</link>
+  </web-item>
+
 </atlassian-plugin>
