@@ -4,11 +4,24 @@ modules:
       function: view
       events:
         - avi:jira:viewed:issue
+    - key: installed-trigger
+      function: installed-func
+      events:
+        - avi:forge:installed:app
+  webtrigger:
+    - key: healthcheck-trigger
+      function: healthcheck-func
   function:
     - key: view
       handler: index.eventHandler
+    - key: healthcheck-func
+      handler: index.healthcheckHandler
+    - key: installed-func
+      handler: index.installedHandler
 app:
   id: ari:cloud:ecosystem::app/01553ce8-8850-4b12-9d2d-67a5f22206b3
+  runtime:
+    name: nodejs18.x
 permissions:
   scopes:
     - read:issue:jira
