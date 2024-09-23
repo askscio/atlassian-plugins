@@ -103,6 +103,17 @@ public class ScioSearchServletFilter implements Filter {
       filterChain.doFilter(servletRequest, servletResponse);
       return;
     }
+    // Fix bug:
+    // [BUG] the plugin can't filter .min.js.map information in Confluence 8.5.8 version
+    // https://github.com/askscio/atlassian-plugins/issues/38
+    // This codes have been tested successfully. They can support to filter .min.js.map information in Confluence 8.5.8 version.
+    // huang.rong.gang@navercorp.com
+    else if (httpreq.getRequestURI().contains(".min.js.map")
+            && httpreq.getRequestURI().contains("/display/")) {
+      logger.debug(String.format("Uninteresting visit: %s", httpreq.getRequestURI()));
+      filterChain.doFilter(servletRequest, servletResponse);
+      return;
+    }
 
     final SettingsManager settingsManager =
         (SettingsManager) ContainerManager.getComponent("settingsManager");
