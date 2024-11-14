@@ -7,7 +7,7 @@ public class ProjectRoleMembersResponse {
     public long id;
     public String description;
     public List<JiraRoleActorInfo> actors;
-
+    
     public static class JiraRoleActorInfo {
         public String id;
         public String displayName;
