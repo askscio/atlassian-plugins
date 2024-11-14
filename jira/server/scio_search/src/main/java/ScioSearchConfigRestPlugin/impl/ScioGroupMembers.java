@@ -48,7 +48,6 @@ public class ScioGroupMembers {
             atlassianUser.emailAddress = user.getEmailAddress();
             atlassianUser.key = user.getKey();
             atlassianUser.active = user.isActive();
-            atlassianUser.displayName = user.getDisplayName();
             atlassianUser.username = user.getUsername();
             response.values.add(atlassianUser);
         }
