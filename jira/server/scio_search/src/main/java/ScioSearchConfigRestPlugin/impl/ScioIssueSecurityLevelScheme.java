@@ -29,7 +29,6 @@ import java.util.ArrayList;
 @Path("/issue_security_level_scheme")
 public class ScioIssueSecurityLevelScheme {
     private static final Logger.Log logger = Logger.getInstance(ScioIssueSecurityLevelScheme.class);
-
     @JiraImport private UserManager userManager;
 
     @Inject
