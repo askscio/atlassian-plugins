@@ -4,15 +4,12 @@ import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.plugin.spring.scanner.annotation.imports.JiraImport;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
-import com.atlassian.sal.api.user.UserManager;
 
 import javax.inject.Inject;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import static ScioSearchConfigRestPlugin.impl.MyPluginComponentImpl.SERVICE_ACCOUNT_USER_EMAIL_CONFIG_KEY;
-import static ScioSearchConfigRestPlugin.impl.MyPluginComponentImpl.TARGET_CONFIG_KEY;
 
+// This class is used to configure service account user email in the plugin Settings from the Jira Web Action.
+// It does a simple validation check before saving the email in the plugin settings.
 public class ScioSearchServiceAccountAction extends JiraWebActionSupport {
     @JiraImport private PluginSettingsFactory pluginSettingsFactory;
     private String serviceAccountUserEmail;
