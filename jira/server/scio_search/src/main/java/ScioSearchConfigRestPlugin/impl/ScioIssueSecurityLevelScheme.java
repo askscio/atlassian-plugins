@@ -7,6 +7,7 @@ import com.atlassian.jira.issue.security.IssueSecuritySchemeManager;
 import com.atlassian.jira.scheme.Scheme;
 import com.atlassian.plugin.spring.scanner.annotation.imports.JiraImport;
 import com.atlassian.jira.project.Project;
+import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.atlassian.sal.api.user.UserManager;
 
 import javax.inject.Inject;
@@ -25,16 +26,18 @@ import java.util.ArrayList;
 public class ScioIssueSecurityLevelScheme {
 
     @JiraImport private UserManager userManager;
+    @JiraImport private PluginSettingsFactory pluginSettingsFactory;
 
     @Inject
-    public ScioIssueSecurityLevelScheme(UserManager userManager) {
+    public ScioIssueSecurityLevelScheme(UserManager userManager, PluginSettingsFactory pluginSettingsFactory) {
         this.userManager = userManager;
+        this.pluginSettingsFactory = pluginSettingsFactory;
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public IssueSecuritySchemeResponse getIssueSecuritySchemeMembers(@QueryParam("projectId") String projectId) {
-        Utils.validateUserIsAdmin(userManager);
+        Utils.validateUser(userManager, pluginSettingsFactory.createGlobalSettings());
 
         Project project = ComponentAccessor.getProjectManager().getProjectObj(Long.parseLong(projectId));
         Scheme scheme = ComponentAccessor.getComponentOfType(IssueSecuritySchemeManager.class).getSchemeFor(project);

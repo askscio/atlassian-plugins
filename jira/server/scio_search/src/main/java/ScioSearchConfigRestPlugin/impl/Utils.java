@@ -1,5 +1,7 @@
 package ScioSearchConfigRestPlugin.impl;
 
+import com.atlassian.crowd.embedded.api.User;
+import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
 
@@ -11,6 +13,14 @@ public class Utils {
 
   public static void validateUserIsAdmin(UserManager userManager) {
     if (!isCurrentUserAdmin(userManager)) {
+      throw new UnauthorizedException("Unauthorized");
+    }
+  }
+
+  public static void validateUser(UserManager userManager, PluginSettings pluginSettings) {
+    String gleanServiceAccount = (String) pluginSettings.get(MyPluginComponentImpl.SERVICE_ACCOUNT_USER_EMAIL_CONFIG_KEY);
+    final UserProfile profile = userManager.getRemoteUser();
+    if (!isCurrentUserAdmin(userManager) && (profile == null || !profile.getEmail().equals(gleanServiceAccount))) {
       throw new UnauthorizedException("Unauthorized");
     }
   }
