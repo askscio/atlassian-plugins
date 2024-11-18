@@ -18,6 +18,10 @@ public class Utils {
   }
 
   public static void validateUser(UserManager userManager, PluginSettings pluginSettings) {
-    validateUserIsAdmin(userManager);
+    String gleanServiceAccount = (String) pluginSettings.get(MyPluginComponentImpl.SERVICE_ACCOUNT_USER_EMAIL_CONFIG_KEY);
+    final UserProfile profile = userManager.getRemoteUser();
+    if (!isCurrentUserAdmin(userManager) && (profile == null || !profile.getEmail().equals(gleanServiceAccount))) {
+      throw new UnauthorizedException("Unauthorized");
+    }
   }
 }
