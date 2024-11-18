@@ -1,13 +1,13 @@
 <html>
    <head>
-      <title>Configure Glean Search Plugin</title>
+      <title>Configure Glean Search Plugin Target URL</title>
    </head>
    <body>
       <div style="background: #FFFFFF">
          <table class="jiraform maxWidth">
             <tr>
                <td class="jiraformheader">
-                  <h3 class="formtitle">Configure Glean Search Plugin</h3>
+                  <h3 class="formtitle">Configure Glean Search Plugin Target URL</h3>
                </td>
             </tr>
          </table>
@@ -36,8 +36,6 @@
                         title="Press Ctrl+S to submit form"
                         class="spaced"
                         />
-                  </td>
-                  <td class="fullyCentered jiraformfooter">
                      <input type="hidden" name="cancelUrl" value="${req.contextPath}/secure/Dashboard.jspa"/>
                      <input type="submit" name="Cancel" id="Cancel" value="Cancel"
                         accesskey="`"
@@ -51,7 +49,7 @@
          #if (${hasErrorMessages})
          <table>
             <tr>
-               <td><b>Failed to configure the plugin</b></td>
+               <td><b>Failed to configure the target URL</b></td>
             </tr>
             #foreach ($error in $action.getErrorMessages())
             <tr>
