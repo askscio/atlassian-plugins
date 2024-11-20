@@ -20,6 +20,12 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 
+/**
+ * Equivalent Api call: https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-project-permission-schemes/#api-rest-api-3-project-projectkeyorid-permissionscheme-get
+ * PermissionSchemeManager Doc: https://docs.atlassian.com/software/jira/docs/api/7.2.2/com/atlassian/jira/permission/PermissionSchemeManager.html
+ * ProjectManager Doc: https://docs.atlassian.com/software/jira/docs/api/7.6.1/com/atlassian/jira/project/ProjectManager.html
+ */
+
 @Named
 @Path("/permission_scheme")
 public class ScioPermissionScheme {
@@ -27,7 +33,6 @@ public class ScioPermissionScheme {
     private final UserManager userManager;
     @Inject
     public ScioPermissionScheme(UserManager userManager) {
-
         this.userManager = userManager;
     }
 
@@ -37,6 +42,9 @@ public class ScioPermissionScheme {
         Utils.validateUserIsAdmin(userManager);
 
         Project project = ComponentAccessor.getProjectManager().getProjectObj(Long.parseLong(projectId));
+        if (project == null) {
+            throw new NotFoundException("Project not found");
+        }
         Scheme scheme = ComponentAccessor.getComponentOfType(PermissionSchemeManager.class).getSchemeFor(project);
         PermissionSchemeResponse response = new PermissionSchemeResponse();
         if (scheme == null) {
