@@ -1,5 +1,7 @@
 package ScioSearchConfigRestPlugin.impl;
 
+import com.atlassian.crowd.embedded.api.User;
+import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
 
@@ -13,5 +15,9 @@ public class Utils {
     if (!isCurrentUserAdmin(userManager)) {
       throw new UnauthorizedException("Unauthorized");
     }
+  }
+
+  public static void validateUser(UserManager userManager, PluginSettings pluginSettings) {
+    validateUserIsAdmin(userManager);
   }
 }
