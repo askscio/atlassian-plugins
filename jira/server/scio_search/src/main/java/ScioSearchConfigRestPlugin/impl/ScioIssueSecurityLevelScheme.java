@@ -1,5 +1,6 @@
 package ScioSearchConfigRestPlugin.impl;
 
+import com.atlassian.extras.common.log.Logger;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.security.IssueSecurityLevel;
 import com.atlassian.jira.issue.security.IssueSecurityLevelScheme;
@@ -19,10 +20,15 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * Equivalent api call: https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-project-permission-schemes/#api-rest-api-3-project-projectkeyorid-issuesecuritylevelscheme-get
+ * ProjectManager Doc: https://docs.atlassian.com/software/jira/docs/api/7.6.1/com/atlassian/jira/project/ProjectManager.html
+ * IssueSecuritySchemeManager Doc: https://docs.atlassian.com/software/jira/docs/api/8.4.1/com/atlassian/jira/issue/security/IssueSecuritySchemeManager.html
+ */
 @Named
 @Path("/issue_security_level_scheme")
-
 public class ScioIssueSecurityLevelScheme {
+    private static final Logger.Log logger = Logger.getInstance(ScioIssueSecurityLevelScheme.class);
 
     @JiraImport private UserManager userManager;
 
@@ -37,9 +43,14 @@ public class ScioIssueSecurityLevelScheme {
         Utils.validateUserIsAdmin(userManager);
 
         Project project = ComponentAccessor.getProjectManager().getProjectObj(Long.parseLong(projectId));
+        if (project == null) {
+            logger.info(String.format("Project %s not found", projectId));
+            throw new NotFoundException("Project not found");
+        }
         Scheme scheme = ComponentAccessor.getComponentOfType(IssueSecuritySchemeManager.class).getSchemeFor(project);
         IssueSecuritySchemeResponse response = new IssueSecuritySchemeResponse();
         if (scheme == null) {
+            logger.info(String.format("Scheme not found for project: %s", projectId));
             return response;
         }
         IssueSecurityLevelScheme schemeObject = ComponentAccessor.getComponentOfType(IssueSecuritySchemeManager.class).getIssueSecurityLevelScheme(scheme.getId());
