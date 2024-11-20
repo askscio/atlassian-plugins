@@ -1,5 +1,6 @@
 package ScioSearchConfigRestPlugin.impl;
 
+import com.atlassian.extras.common.log.Logger;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.permission.PermissionSchemeManager;
 import com.atlassian.jira.project.Project;
@@ -29,6 +30,9 @@ import java.util.ArrayList;
 @Named
 @Path("/permission_scheme")
 public class ScioPermissionScheme {
+
+    private static final Logger.Log logger = Logger.getInstance(ScioPermissionScheme.class);
+
     @JiraImport
     private final UserManager userManager;
     @Inject
@@ -43,11 +47,13 @@ public class ScioPermissionScheme {
 
         Project project = ComponentAccessor.getProjectManager().getProjectObj(Long.parseLong(projectId));
         if (project == null) {
+            logger.info(String.format("Project %s not found", projectId));
             throw new NotFoundException("Project not found");
         }
         Scheme scheme = ComponentAccessor.getComponentOfType(PermissionSchemeManager.class).getSchemeFor(project);
         PermissionSchemeResponse response = new PermissionSchemeResponse();
         if (scheme == null) {
+            logger.info(String.format("No permission scheme found for project %s", projectId));
             return response;
         }
         response.id = scheme.getId().toString();
