@@ -9,8 +9,6 @@ public class AtlassianUser {
     public String name;
     public String key;
     public boolean active;
-
     public String emailAddress;
-
     public String displayName;
 }
