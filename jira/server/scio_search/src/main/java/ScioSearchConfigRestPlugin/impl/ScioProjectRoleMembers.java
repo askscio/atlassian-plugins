@@ -53,8 +53,13 @@ public class ScioProjectRoleMembers {
             throw new NotFoundException("Project not found");
         }
         ProjectRole projectRole = projectRoleManager.getProjectRole(Long.parseLong(roleId));
+        if (projectRole == null){
+            throw new NotFoundException(String.format("Project Role %s not found for project %s", roleId, projectId));
+        }
         ProjectRoleActors projectRoleActors = projectRoleManager.getProjectRoleActors(projectRole, project);
-
+        if (projectRoleActors == null){
+            throw new NotFoundException(String.format("Project Role Actors not found for project %s, role %s", projectId, roleId));
+        }
         ProjectRoleMembersResponse response = new ProjectRoleMembersResponse();
         response.name = projectRole.getName();
         response.id = projectRole.getId();
