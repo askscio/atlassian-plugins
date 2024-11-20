@@ -40,7 +40,7 @@ public class ScioGroupMembers {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public GroupMemberResponse getGroupMembers(@QueryParam("groupname") String groupName, @QueryParam("startAt") int startAt, @QueryParam("maxResults") int maxResults, @QueryParam("includeInactiveUsers") boolean includeInactiveUsers) {
-        Utils.validateUserIsAdmin(userManager);
+        Utils.validateUser(userManager, pluginSettingsFactory.createGlobalSettings());
         if (maxResults > 100){
             throw new BadRequestException("maxResults must not be greater than 100");
         }

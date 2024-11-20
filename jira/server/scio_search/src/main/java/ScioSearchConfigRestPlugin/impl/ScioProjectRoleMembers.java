@@ -7,6 +7,7 @@ import com.atlassian.jira.security.roles.ProjectRole;
 import com.atlassian.jira.security.roles.ProjectRoleActors;
 import com.atlassian.jira.security.roles.ProjectRoleManager;
 import com.atlassian.jira.security.roles.RoleActor;
+import com.atlassian.plugin.PluginAccessor;
 import com.atlassian.plugin.spring.scanner.annotation.imports.JiraImport;
 
 import javax.inject.Inject;
@@ -18,6 +19,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 
+import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
@@ -35,16 +37,18 @@ public class ScioProjectRoleMembers {
     private static final Logger.Log logger = Logger.getInstance(ScioProjectRoleMembers.class);
     @JiraImport
     private final UserManager userManager;
+    @JiraImport private final PluginSettingsFactory pluginSettingsFactory;
 
     @Inject
-    public ScioProjectRoleMembers(UserManager userManager) {
+    public ScioProjectRoleMembers(UserManager userManager, PluginSettingsFactory pluginSettingsFactory) {
         this.userManager = userManager;
+        this.pluginSettingsFactory = pluginSettingsFactory;
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public ProjectRoleMembersResponse getProjectRoleMembers(@QueryParam("projectId") String projectId, @QueryParam("roleId") String roleId) {
-        Utils.validateUserIsAdmin(userManager);
+        Utils.validateUser(userManager, pluginSettingsFactory.createGlobalSettings());
         ProjectRoleManager projectRoleManager = ComponentAccessor.getComponent(ProjectRoleManager.class);
 
         Project project = ComponentAccessor.getProjectManager().getProjectObj(Long.parseLong(projectId));
