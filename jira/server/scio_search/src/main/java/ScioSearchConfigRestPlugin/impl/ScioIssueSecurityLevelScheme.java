@@ -51,7 +51,7 @@ public class ScioIssueSecurityLevelScheme {
         IssueSecuritySchemeResponse response = new IssueSecuritySchemeResponse();
         if (scheme == null) {
             logger.info(String.format("Scheme not found for project: %s", projectId));
-            return response;
+            throw new NotFoundException(String.format("Security level for project %s does not exist", projectId));
         }
         IssueSecurityLevelScheme schemeObject = ComponentAccessor.getComponentOfType(IssueSecuritySchemeManager.class).getIssueSecurityLevelScheme(scheme.getId());
         List<IssueSecurityLevel> securityLevels = ComponentAccessor.getIssueSecurityLevelManager().getIssueSecurityLevels(scheme.getId());
