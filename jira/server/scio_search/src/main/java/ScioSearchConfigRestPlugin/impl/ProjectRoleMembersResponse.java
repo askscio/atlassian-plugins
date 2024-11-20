@@ -8,7 +8,6 @@ public class ProjectRoleMembersResponse {
     public String description;
     public List<JiraRoleActorInfo> actors;
 
-
     public static class JiraRoleActorInfo {
         public String id;
         public String displayName;
