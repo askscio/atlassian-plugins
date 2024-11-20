@@ -1,5 +1,6 @@
 package ScioSearchConfigRestPlugin.impl;
 
+import com.atlassian.extras.common.log.Logger;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.permission.PermissionSchemeManager;
 import com.atlassian.jira.project.Project;
@@ -21,9 +22,17 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 
+/**
+ * Equivalent Api call: https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-project-permission-schemes/#api-rest-api-3-project-projectkeyorid-permissionscheme-get
+ * PermissionSchemeManager Doc: https://docs.atlassian.com/software/jira/docs/api/7.2.2/com/atlassian/jira/permission/PermissionSchemeManager.html
+ * ProjectManager Doc: https://docs.atlassian.com/software/jira/docs/api/7.6.1/com/atlassian/jira/project/ProjectManager.html
+ */
+
 @Named
 @Path("/permission_scheme")
 public class ScioPermissionScheme {
+
+    private static final Logger.Log logger = Logger.getInstance(ScioPermissionScheme.class);
     @JiraImport
     private final UserManager userManager;
     @JiraImport
@@ -40,9 +49,14 @@ public class ScioPermissionScheme {
         Utils.validateUser(userManager, pluginSettingsFactory.createGlobalSettings());
 
         Project project = ComponentAccessor.getProjectManager().getProjectObj(Long.parseLong(projectId));
+        if (project == null) {
+            logger.info(String.format("Project %s not found", projectId));
+            throw new NotFoundException("Project not found");
+        }
         Scheme scheme = ComponentAccessor.getComponentOfType(PermissionSchemeManager.class).getSchemeFor(project);
         PermissionSchemeResponse response = new PermissionSchemeResponse();
         if (scheme == null) {
+            logger.info(String.format("No permission scheme found for project %s", projectId));
             return response;
         }
         response.id = scheme.getId().toString();
