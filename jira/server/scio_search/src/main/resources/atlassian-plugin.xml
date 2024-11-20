@@ -60,4 +60,23 @@
     <link>/secure/ScioSearchConfigAction!default.jspa</link>
   </web-item>
 
+  <webwork1 key="scio-search-service-account-actions" name="Scio Search Service Account Actions" class="java.lang.Object" roles-required="admin" >
+    <actions>
+      <action name="ScioSearchConfigRestPlugin.impl.ScioSearchServiceAccountAction" alias="ScioSearchServiceAccountAction">
+        <view name="success">/vm/serviceAccountSuccess.vm</view>
+        <view name="input">/vm/serviceAccountInput.vm</view>
+      </action>
+    </actions>
+  </webwork1>
+  <web-section key="scio-search-service-account-section"
+               name="scio-search-service-account Section"
+               location="system.admin"
+               weight="110">
+    <description>Scio Search Config Section</description>
+    <label key="scio_search.serviceAccount.section.name"/>
+  </web-section>
+  <web-item key="scio-search-service-account-action" name="Scio Search Service Account Action" section="system.admin/scio-search-service-account-section" weight="10">
+    <label key="scio_search.serviceAccount.action.name"/>
+    <link>/secure/ScioSearchServiceAccountAction!default.jspa</link>
+  </web-item>
 </atlassian-plugin>
