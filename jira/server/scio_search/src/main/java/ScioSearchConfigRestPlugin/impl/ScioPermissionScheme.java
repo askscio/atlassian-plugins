@@ -32,6 +32,7 @@ import java.util.ArrayList;
 public class ScioPermissionScheme {
 
     private static final Logger.Log logger = Logger.getInstance(ScioPermissionScheme.class);
+
     @JiraImport
     private final UserManager userManager;
     @Inject
