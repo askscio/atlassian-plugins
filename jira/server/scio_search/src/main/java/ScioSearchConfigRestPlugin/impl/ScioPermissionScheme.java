@@ -10,6 +10,7 @@ import com.atlassian.jira.security.roles.ProjectRole;
 import com.atlassian.jira.security.roles.ProjectRoleManager;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.plugin.spring.scanner.annotation.imports.JiraImport;
+import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.atlassian.sal.api.user.UserManager;
 
 import javax.inject.Inject;
@@ -35,15 +36,18 @@ public class ScioPermissionScheme {
 
     @JiraImport
     private final UserManager userManager;
+    @JiraImport
+    private final PluginSettingsFactory pluginSettingsFactory;
     @Inject
-    public ScioPermissionScheme(UserManager userManager) {
+    public ScioPermissionScheme(UserManager userManager, PluginSettingsFactory pluginSettingsFactory) {
         this.userManager = userManager;
+        this.pluginSettingsFactory = pluginSettingsFactory;
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public PermissionSchemeResponse getIssueSecuritySchemeMembers(@QueryParam("projectId") String projectId) {
-        Utils.validateUserIsAdmin(userManager);
+        Utils.validateUser(userManager, pluginSettingsFactory.createGlobalSettings());
 
         Project project = ComponentAccessor.getProjectManager().getProjectObj(Long.parseLong(projectId));
         if (project == null) {

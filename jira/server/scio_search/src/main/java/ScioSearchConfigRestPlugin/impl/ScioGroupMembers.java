@@ -6,6 +6,7 @@ import com.atlassian.jira.util.Page;
 import com.atlassian.jira.util.PageRequest;
 import com.atlassian.jira.util.PageRequests;
 import com.atlassian.plugin.spring.scanner.annotation.imports.JiraImport;
+import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.atlassian.sal.api.user.UserManager;
 
 import javax.inject.Inject;
@@ -27,17 +28,19 @@ public class ScioGroupMembers {
 
     @JiraImport private final UserManager userManager;
     @JiraImport private final GroupManager groupManager;
+    @JiraImport private final PluginSettingsFactory pluginSettingsFactory;
 
     @Inject
-    public ScioGroupMembers(GroupManager groupManager, UserManager userManager) {
+    public ScioGroupMembers(GroupManager groupManager, UserManager userManager, PluginSettingsFactory pluginSettingsFactory) {
         this.groupManager = groupManager;
         this.userManager = userManager;
+        this.pluginSettingsFactory = pluginSettingsFactory;
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public GroupMemberResponse getGroupMembers(@QueryParam("groupname") String groupName, @QueryParam("startAt") int startAt, @QueryParam("maxResults") int maxResults, @QueryParam("includeInactiveUsers") boolean includeInactiveUsers) {
-        Utils.validateUserIsAdmin(userManager);
+        Utils.validateUser(userManager, pluginSettingsFactory.createGlobalSettings());
         if (maxResults > 100){
             throw new BadRequestException("maxResults must not be greater than 100");
         }
