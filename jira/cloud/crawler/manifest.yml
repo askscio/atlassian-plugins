@@ -21,21 +21,21 @@ modules:
     - key: remote-token-refresh
       remote: scio-apps
       route:
-        path: /refresh
+        path: /jira/refresh
       auth:
         appSystemToken:
           enabled: true
     - key: remote-lifecycle-events
       remote: scio-apps
       route:
-        path: /lifecycle
+        path: /jira/lifecycle
       auth:
         appSystemToken:
           enabled: true
     - key: remote-view-events
       remote: scio-apps
       route:
-        path: /view
+        path: /jira/view
       auth:
         appSystemToken:
           enabled: true  
