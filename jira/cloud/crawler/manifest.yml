@@ -54,5 +54,5 @@ permissions:
     - read:servicedesk-request
 remotes:
   - key: scio-apps
-    baseUrl: https://f5d3-49-37-180-189.ngrok-free.app
+    baseUrl: https://apps-be.glean.com
 
