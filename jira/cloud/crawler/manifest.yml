@@ -1,0 +1,59 @@
+app:
+  runtime:
+    name: nodejs18.x
+  id: ari:cloud:ecosystem::app/5a05cd46-5d62-4819-a1bb-8273526385b6
+modules:
+  # This scheduled trigger will refresh the tokens every 1 hour 
+  scheduledTrigger:
+    - key: token-refresh
+      endpoint: remote-token-refresh
+      interval: hour
+  trigger:
+    - key: lifecycle-events
+      endpoint: remote-lifecycle-events
+      events:
+        - avi:forge:installed:app
+        - avi:forge:upgraded:app
+    - key: view-events
+      endpoint: remote-view-events
+      events:
+        - avi:jira:viewed:issue
+  endpoint:
+    - key: remote-token-refresh
+      remote: scio-apps
+      route:
+        path: /refresh
+      auth:
+        appSystemToken:
+          enabled: true
+    - key: remote-lifecycle-events
+      remote: scio-apps
+      route:
+        path: /lifecycle
+      auth:
+        appSystemToken:
+          enabled: true
+    - key: remote-view-events
+      remote: scio-apps
+      route:
+        path: /view
+      auth:
+        appSystemToken:
+          enabled: true  
+permissions:
+  scopes:
+    - read:app-system-token
+    - read:email-address:jira
+    - read:jira-work
+    - read:group:jira
+    - read:user:jira
+    - read:avatar:jira
+    - read:jira-user
+    - read:field:jira
+    - read:issue-security-level:jira
+    - read:project-role:jira
+    - read:servicedesk-request
+remotes:
+  - key: scio-apps
+    baseUrl: https://f5d3-49-37-180-189.ngrok-free.app
+
