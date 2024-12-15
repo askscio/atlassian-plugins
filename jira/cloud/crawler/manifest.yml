@@ -3,7 +3,6 @@ app:
     name: nodejs18.x
   id: ari:cloud:ecosystem::app/5a05cd46-5d62-4819-a1bb-8273526385b6
 modules:
-  # This scheduled trigger will refresh the tokens every 1 hour 
   scheduledTrigger:
     - key: token-refresh
       endpoint: remote-token-refresh
