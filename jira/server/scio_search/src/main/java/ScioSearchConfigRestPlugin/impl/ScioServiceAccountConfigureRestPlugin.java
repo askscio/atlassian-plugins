@@ -7,9 +7,6 @@ import com.atlassian.plugin.spring.scanner.annotation.imports.JiraImport;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.atlassian.sal.api.user.UserManager;
-import com.atlassian.sal.api.user.UserProfile;
-import java.net.MalformedURLException;
-import java.net.URL;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -20,7 +17,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Named
-@Path("/configure/serviceaccount_username")
+@Path("/configure/serviceaccount_email")
 public class ScioServiceAccountConfigureRestPlugin {
 
     private static final Logger.Log logger = Logger.getInstance(ScioSearchConfigRestPlugin.class);
@@ -39,30 +36,41 @@ public class ScioServiceAccountConfigureRestPlugin {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public ScioServiceAccountConfigureResponse getServiceAccountUsername() {
+    public ScioServiceAccountConfigureResponse getServiceAccountEmail() {
         Utils.validateUserIsAdmin(userManager);
         final PluginSettings pluginSettings = pluginSettingsFactory.createGlobalSettings();
         final String username = (String) pluginSettings.get(SERVICE_ACCOUNT_USER_EMAIL_CONFIG_KEY);
         final ScioServiceAccountConfigureResponse response = new ScioServiceAccountConfigureResponse();
-        response.setServiceAccountUsername(username);
+        response.setServiceAccountEmail(username);
         return response;
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public ScioServiceAccountConfigureResponse setServiceAccountUsername(ScioConfigRequest request) {
-        logger.debug(String.format("Received request for setting service account username: %s", request.getTarget()));
+    public ScioServiceAccountConfigureResponse setServiceAccountEmail(ScioServiceAccountConfigureRequest request) {
+        logger.debug(String.format("Received request for setting service account email: %s", request.getServiceAccountEmail()));
         Utils.validateUserIsAdmin(userManager);
-        try {
-            new URL(request.getTarget());
-        } catch (MalformedURLException e) {
-            throw new UnacceptableException("Unacceptable");
+        if (!isEmailValid(request.getServiceAccountEmail())) {
+            throw new UnacceptableException("Invalid Email Address");
         }
         final PluginSettings pluginSettings = pluginSettingsFactory.createGlobalSettings();
-        pluginSettings.put(SERVICE_ACCOUNT_USER_EMAIL_CONFIG_KEY, request.getTarget());
-        logger.info(String.format("Target changed to: %s", request.getTarget()));
-        return getServiceAccountUsername();
+        pluginSettings.put(SERVICE_ACCOUNT_USER_EMAIL_CONFIG_KEY, request.getServiceAccountEmail());
+        logger.info(String.format("service account email changed to: %s", request.getServiceAccountEmail()));
+        return getServiceAccountEmail();
+    }
+
+    private boolean isEmailValid(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            return false;
+        }
+        email = email.trim();
+        /**
+         * Must have text before and after '@'
+         * Must have a dot ('.') in the domain with text on both sides
+         */
+        String emailRegex = "^[^@]+@[^@]+\\.[^@]+$";
+        return email.matches(emailRegex);
     }
 }
 

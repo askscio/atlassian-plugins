@@ -1,11 +1,6 @@
 package ScioSearchConfigRestPlugin.impl;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-
-
-public class ScioServiceAccountConfigureResponse {
+public class ScioServiceAccountConfigureRequest {
     private String serviceAccountEmail;
 
     public void setServiceAccountEmail(String serviceAccountEmail) {
