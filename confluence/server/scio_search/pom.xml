@@ -7,7 +7,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.askscio.atlassian_plugins.confluence</groupId>
   <artifactId>glean_search</artifactId>
-  <version>1.4.4</version>
+  <version>1.4.5</version>
 
   <organization>
     <name>Glean</name>
@@ -106,6 +106,31 @@
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
       <version>2.2.2-atlassian-1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.joda</groupId>
+      <artifactId>joda-convert</artifactId>
+      <version>2.2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-core-asl</artifactId>
+      <version>1.9.14-atlassian-6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-mapper-asl</artifactId>
+      <version>1.9.14-atlassian-6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-jaxrs</artifactId>
+      <version>1.9.14-atlassian-6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-xc</artifactId>
+      <version>1.9.14-atlassian-6</version>
     </dependency>
   </dependencies>
 
