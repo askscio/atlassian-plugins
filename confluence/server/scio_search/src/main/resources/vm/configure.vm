@@ -11,10 +11,19 @@
 
         <input type="text" name="target" id="target" value="$generalUtil.htmlEncode( $target )" class="text">
 
+        <div class="description">Configure target url for Scio Search plugin for sending the webhook events.</div>
+
+        <h2>Service Account Username</h2>
+
+        <input type="text" name="username" id="username" value="$generalUtil.htmlEncode( $username )" class="text">
+
+        <div class="description">Configure Glean Crawler Service Account Username.</div>
+
+        <br><br>
         <input class="button submit" type="submit" value="Submit">
 
-        <div class="description">Configure target url for Scio Search plugin for sending the webhook events.</div>
         #foreach ($error in $fieldErrors.get("scio_search.target")) <div class="error">$error</div> #end
+        #foreach ($error in $fieldErrors.get("scio_search.username")) <div class="error">$error</div> #end
     </form>
 
     #if($actionMessages.size() > 0)

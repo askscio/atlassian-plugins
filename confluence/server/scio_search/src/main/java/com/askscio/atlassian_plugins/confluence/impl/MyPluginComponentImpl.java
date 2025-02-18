@@ -10,6 +10,8 @@ public class MyPluginComponentImpl implements MyPluginComponent {
   public static final String PLUGIN_STATUS_KEY = "com.askscio.atlassian_plugins.confluence.status";
   public static final String PLUGIN_STATUS_LAST_UPDATED_KEY =
       "com.askscio.atlassian_plugins.confluence.status.lastUpdated";
+  public static final String SERVICE_ACCOUNT_USERNAME_CONFIG_KEY =
+      "com.askscio.atlassian_plugins.confluence.username";
   private final ApplicationProperties applicationProperties;
 
   public MyPluginComponentImpl(final ApplicationProperties applicationProperties) {
