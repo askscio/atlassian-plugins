@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "@forge/api": "^2.7.0"
+    "@forge/api": "^5.0.1"
   }
 }
