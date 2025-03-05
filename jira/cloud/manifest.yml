@@ -9,6 +9,8 @@ modules:
       handler: index.eventHandler
 app:
   id: ari:cloud:ecosystem::app/01553ce8-8850-4b12-9d2d-67a5f22206b3
+  runtime:
+    name: nodejs22.x
 permissions:
   scopes:
     - read:issue:jira
