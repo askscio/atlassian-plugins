@@ -1,4 +1,5 @@
 jira/server/scio_search/target/
+jira/server/scio_search_10/target/
 confluence/server/scio_search/target/
 
 **/.idea/
