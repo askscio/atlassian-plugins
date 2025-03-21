@@ -44,6 +44,7 @@ public class ScioSearchServletFilter implements Filter {
           new LinkedBlockingQueue<>(MAX_OUTSTANDING_REQUESTS));
 
   @JiraImport private final PluginSettingsFactory pluginSettingsFactory;
+
   @Inject
   public ScioSearchServletFilter(final PluginSettingsFactory pluginSettingsFactory) {
     this.pluginSettingsFactory = pluginSettingsFactory;
@@ -67,21 +68,22 @@ public class ScioSearchServletFilter implements Filter {
     final HttpServletRequest httpreq = (HttpServletRequest) servletRequest;
     String requestURI = httpreq.getRequestURI();
     String queryStr = httpreq.getQueryString();
-    if ((!requestURI.contains("/browse/") &&
-        !requestURI.contains("/secure/ProjectIssueNavigatorAction!issueViewWithSidebar.jspa") &&
-        !requestURI.contains("/secure/AjaxIssueAction!default.jspa") &&
-        !requestURI.contains("/secure/Dashboard.jspa") &&
-        !requestURI.replaceAll("/$", "").equals("/issues")) ||
+    if ((!requestURI.contains("/browse/")
+            && !requestURI.contains("/secure/ProjectIssueNavigatorAction!issueViewWithSidebar.jspa")
+            && !requestURI.contains("/secure/AjaxIssueAction!default.jspa")
+            && !requestURI.contains("/secure/Dashboard.jspa")
+            && !requestURI.replaceAll("/$", "").equals("/issues"))
+        ||
         /* ignore urls like /secure/Dashboard.jspa?null, /secure/AjaxIssueAction!default.jspa?null,
         /secure/ProjectIssueNavigatorAction!issueViewWithSidebar.jspa?null */
-        (requestURI.equals("/secure/Dashboard.jspa") &&
-            (queryStr==null || !queryStr.contains("selectPageId"))) ||
-        (requestURI.equals("/secure/AjaxIssueAction!default.jspa") &&
-            (queryStr==null || !queryStr.contains("issueKey"))) ||
-        (requestURI.equals("/secure/ProjectIssueNavigatorAction!issueViewWithSidebar.jspa") &&
-            (queryStr==null || !queryStr.contains("issueKey"))) ||
-        (requestURI.replaceAll("/$", "").equals("/issues") &&
-            (queryStr==null || !queryStr.contains("filter")))) {
+        (requestURI.equals("/secure/Dashboard.jspa")
+            && (queryStr == null || !queryStr.contains("selectPageId")))
+        || (requestURI.equals("/secure/AjaxIssueAction!default.jspa")
+            && (queryStr == null || !queryStr.contains("issueKey")))
+        || (requestURI.equals("/secure/ProjectIssueNavigatorAction!issueViewWithSidebar.jspa")
+            && (queryStr == null || !queryStr.contains("issueKey")))
+        || (requestURI.replaceAll("/$", "").equals("/issues")
+            && (queryStr == null || !queryStr.contains("filter")))) {
       logger.debug(String.format("Uninteresting visit: %s", httpreq.getRequestURI()));
       filterChain.doFilter(servletRequest, servletResponse);
       return;
@@ -142,7 +144,8 @@ public class ScioSearchServletFilter implements Filter {
     }
     logger.debug(String.format("Visit url %s", visitUrl));
     try {
-      executor.submit(new ScioWebhookTask(target, visitUrl.toString(), user.getUsername().toLowerCase()));
+      executor.submit(
+          new ScioWebhookTask(target, visitUrl.toString(), user.getUsername().toLowerCase()));
     } catch (RejectedExecutionException e) {
       logger.warn(String.format("Queue full: %s", e.getMessage()));
     }

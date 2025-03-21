@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.askscio.atlassian_plugins.jira</groupId>
@@ -16,14 +16,16 @@
     </organization>
 
     <name>Glean Search</name>
-    <description>This is the com.askscio.atlassian_plugins.jira:glean_search plugin for Atlassian JIRA.</description>
+    <description>This is the com.askscio.atlassian_plugins.jira:glean_search plugin for Atlassian
+        JIRA.
+    </description>
     <packaging>atlassian-plugin</packaging>
 
     <dependencies>
         <dependency>
             <groupId>com.atlassian.plugins.rest</groupId>
-            <artifactId>atlassian-rest-common</artifactId>
-            <version>6.1.11</version>
+            <artifactId>atlassian-rest-v2-api</artifactId>
+            <version>8.0.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -42,6 +44,12 @@
             <groupId>com.atlassian.spring</groupId>
             <artifactId>atlassian-spring</artifactId>
             <version>2.0.8</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.18.3</version>
             <scope>provided</scope>
         </dependency>
 
@@ -68,12 +76,19 @@
             <version>2.1.7</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-            <scope>provided</scope>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>jakarta.inject</groupId>-->
+        <!--            <artifactId>jakarta.inject-api</artifactId>-->
+        <!--            <version>2.0.1</version>-->
+        <!--            <scope>compile</scope>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>jakarta.servlet</groupId>-->
+        <!--            <artifactId>jakarta.servlet-api</artifactId>-->
+        <!--            <version>6.0.0</version>-->
+        <!--            <scope>compile</scope>-->
+        <!--        </dependency>-->
+
 
         <!-- WIRED TEST RUNNER DEPENDENCIES -->
         <dependency>
@@ -82,17 +97,12 @@
             <version>${plugin.testrunner.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>1.1.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.2.2-atlassian-1</version>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>jakarta.ws.rs</groupId>-->
+        <!--            <artifactId>jakarta.ws.rs-api</artifactId>-->
+        <!--            <version>4.0.0</version>-->
+        <!--            <scope>provided</scope>-->
+        <!--        </dependency>-->
 
         <!-- Uncomment to use TestKit in your project. Details at https://bitbucket.org/atlassian/jira-testkit -->
         <!-- You can read more about TestKit at https://developer.atlassian.com/display/JIRADEV/Plugin+Tutorial+-+Smarter+integration+testing+with+TestKit -->
@@ -166,12 +176,51 @@
                     <verbose>false</verbose>
                 </configuration>
             </plugin>
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-enforcer-plugin</artifactId>-->
+            <!--                <version>3.0.0</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>enforce-banned-dependencies</id>-->
+            <!--                        <goals>-->
+            <!--                            <goal>enforce</goal>-->
+            <!--                        </goals>-->
+            <!--                        <configuration>-->
+            <!--                            <rules>-->
+            <!--                                <bannedDependencies>-->
+            <!--                                    <excludes>-->
+            <!--                                        <exclude>jakarta.inject:jakarta.inject-api:jar:2.0.1-->
+            <!--                                        </exclude>-->
+            <!--                                        <exclude>jakarta.servlet:jakarta.servlet-api:jar:6.0.0-->
+            <!--                                        </exclude>-->
+            <!--                                    </excludes>-->
+            <!--                                </bannedDependencies>-->
+            <!--                            </rules>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.felix</groupId>-->
+            <!--                <artifactId>maven-bundle-plugin</artifactId>-->
+            <!--                <version>5.1.8</version>-->
+            <!--                <extensions>true</extensions>-->
+            <!--                <configuration>-->
+            <!--                    <instructions>-->
+            <!--                        <Import-Package>-->
+            <!--                            jakarta.inject.*;version="[2.0,3.0)",-->
+            <!--                            *-->
+            <!--                        </Import-Package>-->
+            <!--                    </instructions>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
         </plugins>
     </build>
 
     <properties>
-        <jira.version>7.13.5</jira.version>
-        <amps.version>8.1.2</amps.version>
+        <jira.version>10.5.0</jira.version>
+        <amps.version>9.1.1</amps.version>
         <plugin.testrunner.version>2.0.2</plugin.testrunner.version>
         <!-- This property ensures consistency between the key in atlassian-plugin.xml and the OSGi bundle's key. -->
         <atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>

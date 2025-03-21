@@ -26,22 +26,22 @@ import javax.ws.rs.core.MediaType;
 public class ScioSearchInfo {
   private static final Logger.Log logger = Logger.getInstance(ScioSearchInfo.class);
 
-  @JiraImport
-  private final UserManager userManager;
-  // Ref: https://docs.atlassian.com/software/jira/docs/api/7.6.1/com/atlassian/jira/config/properties/ApplicationProperties.html
-  @JiraImport
-  private final ApplicationProperties applicationProperties;
-  // Ref: https://docs.atlassian.com/software/jira/docs/api/7.6.1/com/atlassian/jira/util/BuildUtilsInfo.html
-  @JiraImport
-  private final BuildUtilsInfo buildUtilsInfo;
-  @JiraImport
-  private final PluginSettingsFactory pluginSettingsFactory;
-  @JiraImport
-  private final PluginAccessor pluginAccessor;
+  @JiraImport private final UserManager userManager;
+  // Ref:
+  // https://docs.atlassian.com/software/jira/docs/api/7.6.1/com/atlassian/jira/config/properties/ApplicationProperties.html
+  @JiraImport private final ApplicationProperties applicationProperties;
+  // Ref:
+  // https://docs.atlassian.com/software/jira/docs/api/7.6.1/com/atlassian/jira/util/BuildUtilsInfo.html
+  @JiraImport private final BuildUtilsInfo buildUtilsInfo;
+  @JiraImport private final PluginSettingsFactory pluginSettingsFactory;
+  @JiraImport private final PluginAccessor pluginAccessor;
 
   @Inject
-  public ScioSearchInfo(UserManager userManager, ApplicationProperties applicationProperties,
-      BuildUtilsInfo buildUtilsInfo, PluginSettingsFactory pluginSettingsFactory,
+  public ScioSearchInfo(
+      UserManager userManager,
+      ApplicationProperties applicationProperties,
+      BuildUtilsInfo buildUtilsInfo,
+      PluginSettingsFactory pluginSettingsFactory,
       PluginAccessor pluginAccessor) {
     this.userManager = userManager;
     this.applicationProperties = applicationProperties;
@@ -74,10 +74,8 @@ public class ScioSearchInfo {
     final PluginSettings pluginSettings = pluginSettingsFactory.createGlobalSettings();
     final Plugin plugin = pluginAccessor.getPlugin(Constants.PLUGIN_KEY);
     if (plugin != null && plugin.getPluginInformation() != null) {
-      scioPluginInfo.version = pluginAccessor
-          .getPlugin(Constants.PLUGIN_KEY)
-          .getPluginInformation()
-          .getVersion();
+      scioPluginInfo.version =
+          pluginAccessor.getPlugin(Constants.PLUGIN_KEY).getPluginInformation().getVersion();
     } else {
       logger.warn(String.format("Plugin version not found for %s", Constants.PLUGIN_KEY));
       scioPluginInfo.version = null;
