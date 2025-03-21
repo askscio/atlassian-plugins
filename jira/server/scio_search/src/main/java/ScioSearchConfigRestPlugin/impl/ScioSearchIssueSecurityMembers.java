@@ -49,14 +49,20 @@ public class ScioSearchIssueSecurityMembers {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public ScioIssueSecurityMembersResponse getIssueSecuritySchemeMembers(@QueryParam("schemeId") String schemeIdStr) {
-    logger.debug(String.format("Received request for getting issue security scheme members: %s", schemeIdStr));
+  public ScioIssueSecurityMembersResponse getIssueSecuritySchemeMembers(
+      @QueryParam("schemeId") String schemeIdStr) {
+    logger.debug(
+        String.format(
+            "Received request for getting issue security scheme members: %s", schemeIdStr));
     Utils.validateUser(userManager, pluginSettingsFactory.createGlobalSettings());
     Long schemeId = Long.parseLong(schemeIdStr);
 
-    final IssueSecurityLevelManager issueSecurityLevelManager = ComponentAccessor.getIssueSecurityLevelManager();
-    final IssueSecuritySchemeManager issueSecuritySchemeManager = ComponentAccessor.getComponentOfType(IssueSecuritySchemeManager.class);
-    final Collection<IssueSecurityLevel> issueSecurityLevels = issueSecurityLevelManager.getIssueSecurityLevels(schemeId);
+    final IssueSecurityLevelManager issueSecurityLevelManager =
+        ComponentAccessor.getIssueSecurityLevelManager();
+    final IssueSecuritySchemeManager issueSecuritySchemeManager =
+        ComponentAccessor.getComponentOfType(IssueSecuritySchemeManager.class);
+    final Collection<IssueSecurityLevel> issueSecurityLevels =
+        issueSecurityLevelManager.getIssueSecurityLevels(schemeId);
 
     final ScioIssueSecurityMembersResponse response = new ScioIssueSecurityMembersResponse();
     response.startAt = 0;
@@ -67,13 +73,32 @@ public class ScioSearchIssueSecurityMembers {
       return response;
     }
     for (IssueSecurityLevel isl : issueSecurityLevels) {
-      logger.debug("IssueSecurityLevel: " + isl.getDescription() + ":" + isl.getName() + ":" + String.valueOf(isl.getId()) + ":" + String.valueOf(isl.getSchemeId()));
-      List<IssueSecurityLevelPermission> issueSecurityLevelPermissions = issueSecuritySchemeManager.getPermissionsBySecurityLevel(isl.getId());
+      logger.debug(
+          "IssueSecurityLevel: "
+              + isl.getDescription()
+              + ":"
+              + isl.getName()
+              + ":"
+              + String.valueOf(isl.getId())
+              + ":"
+              + String.valueOf(isl.getSchemeId()));
+      List<IssueSecurityLevelPermission> issueSecurityLevelPermissions =
+          issueSecuritySchemeManager.getPermissionsBySecurityLevel(isl.getId());
       if (issueSecurityLevelPermissions == null) {
         continue;
       }
       for (IssueSecurityLevelPermission islp : issueSecurityLevelPermissions) {
-        logger.debug("IssueSecurityLevelPermission: " + islp.getId() + ":" + islp.getParameter() + ":" + islp.getSchemeId() + ":" + islp.getSecurityLevelId() + ":" + islp.getType());
+        logger.debug(
+            "IssueSecurityLevelPermission: "
+                + islp.getId()
+                + ":"
+                + islp.getParameter()
+                + ":"
+                + islp.getSchemeId()
+                + ":"
+                + islp.getSecurityLevelId()
+                + ":"
+                + islp.getType());
         JiraPermissionHolderInfo holder = new JiraPermissionHolderInfo();
         holder.type = islp.getType();
         holder.parameter = islp.getParameter();

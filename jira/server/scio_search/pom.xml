@@ -46,12 +46,6 @@
             <version>2.0.8</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>2.18.3</version>
-            <scope>provided</scope>
-        </dependency>
 
         <!-- Add dependency on jira-core if you want access to JIRA implementation classes as well as the sanctioned API. -->
         <!-- This is not normally recommended, but may be required eg when migrating a plugin originally developed against JIRA 4.x -->
@@ -69,25 +63,12 @@
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>com.atlassian.plugin</groupId>
             <artifactId>atlassian-spring-scanner-annotation</artifactId>
             <version>2.1.7</version>
             <scope>provided</scope>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>jakarta.inject</groupId>-->
-        <!--            <artifactId>jakarta.inject-api</artifactId>-->
-        <!--            <version>2.0.1</version>-->
-        <!--            <scope>compile</scope>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>jakarta.servlet</groupId>-->
-        <!--            <artifactId>jakarta.servlet-api</artifactId>-->
-        <!--            <version>6.0.0</version>-->
-        <!--            <scope>compile</scope>-->
-        <!--        </dependency>-->
 
 
         <!-- WIRED TEST RUNNER DEPENDENCIES -->
@@ -97,12 +78,6 @@
             <version>${plugin.testrunner.version}</version>
             <scope>test</scope>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>jakarta.ws.rs</groupId>-->
-        <!--            <artifactId>jakarta.ws.rs-api</artifactId>-->
-        <!--            <version>4.0.0</version>-->
-        <!--            <scope>provided</scope>-->
-        <!--        </dependency>-->
 
         <!-- Uncomment to use TestKit in your project. Details at https://bitbucket.org/atlassian/jira-testkit -->
         <!-- You can read more about TestKit at https://developer.atlassian.com/display/JIRADEV/Plugin+Tutorial+-+Smarter+integration+testing+with+TestKit -->
@@ -176,45 +151,6 @@
                     <verbose>false</verbose>
                 </configuration>
             </plugin>
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-enforcer-plugin</artifactId>-->
-            <!--                <version>3.0.0</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <id>enforce-banned-dependencies</id>-->
-            <!--                        <goals>-->
-            <!--                            <goal>enforce</goal>-->
-            <!--                        </goals>-->
-            <!--                        <configuration>-->
-            <!--                            <rules>-->
-            <!--                                <bannedDependencies>-->
-            <!--                                    <excludes>-->
-            <!--                                        <exclude>jakarta.inject:jakarta.inject-api:jar:2.0.1-->
-            <!--                                        </exclude>-->
-            <!--                                        <exclude>jakarta.servlet:jakarta.servlet-api:jar:6.0.0-->
-            <!--                                        </exclude>-->
-            <!--                                    </excludes>-->
-            <!--                                </bannedDependencies>-->
-            <!--                            </rules>-->
-            <!--                        </configuration>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--            </plugin>-->
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.felix</groupId>-->
-            <!--                <artifactId>maven-bundle-plugin</artifactId>-->
-            <!--                <version>5.1.8</version>-->
-            <!--                <extensions>true</extensions>-->
-            <!--                <configuration>-->
-            <!--                    <instructions>-->
-            <!--                        <Import-Package>-->
-            <!--                            jakarta.inject.*;version="[2.0,3.0)",-->
-            <!--                            *-->
-            <!--                        </Import-Package>-->
-            <!--                    </instructions>-->
-            <!--                </configuration>-->
-            <!--            </plugin>-->
         </plugins>
     </build>
 
