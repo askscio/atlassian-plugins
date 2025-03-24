@@ -1,5 +1,7 @@
 package ScioSearchConfigRestPlugin.impl;
 
+import com.atlassian.jira.security.request.RequestMethod;
+import com.atlassian.jira.security.request.SupportedMethods;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.plugin.spring.scanner.annotation.imports.JiraImport;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
@@ -12,54 +14,58 @@ import java.net.URL;
 
 import static ScioSearchConfigRestPlugin.impl.MyPluginComponentImpl.TARGET_CONFIG_KEY;
 
+@SupportedMethods({RequestMethod.POST})
 public class ScioSearchConfigAction extends JiraWebActionSupport {
-    @JiraImport private PluginSettingsFactory pluginSettingsFactory;
-    private String target;
+  @JiraImport private PluginSettingsFactory pluginSettingsFactory;
+  private String target;
 
-    public ScioSearchConfigAction() {}
+  public ScioSearchConfigAction() {}
 
-    @Inject
-    public ScioSearchConfigAction(PluginSettingsFactory pluginSettingsFactory) {
-        this.pluginSettingsFactory = pluginSettingsFactory;
+  @Inject
+  public ScioSearchConfigAction(PluginSettingsFactory pluginSettingsFactory) {
+    this.pluginSettingsFactory = pluginSettingsFactory;
+  }
+
+  public String getTarget() {
+    return target;
+  }
+
+  public void setTarget(String target) {
+    this.target = target;
+  }
+
+  public void setPluginSettingsFactory(PluginSettingsFactory pluginSettingsFactory) {
+    this.pluginSettingsFactory = pluginSettingsFactory;
+  }
+
+  @Override
+  @SupportedMethods({RequestMethod.POST})
+  public void doValidation() {
+    String targetUrl = getTarget();
+    if (targetUrl == null || targetUrl.isEmpty()) {
+      addErrorMessage("Target URL is required");
+      return;
     }
-
-    public String getTarget() {
-        return target;
+    try {
+      new URL(targetUrl);
+    } catch (MalformedURLException e) {
+      addErrorMessage("Invalid target URL");
     }
+  }
 
-    public void setTarget(String target) {
-        this.target = target;
-    }
+  @Override
+  @SupportedMethods({RequestMethod.GET})
+  public String doDefault() throws Exception {
+    PluginSettings pluginSettings = pluginSettingsFactory.createGlobalSettings();
+    setTarget((String) pluginSettings.get(TARGET_CONFIG_KEY));
+    return super.doDefault();
+  }
 
-    public void setPluginSettingsFactory(PluginSettingsFactory pluginSettingsFactory) {
-        this.pluginSettingsFactory = pluginSettingsFactory;
-    }
-
-    @Override
-    public void doValidation() {
-        String targetUrl = getTarget();
-        if(targetUrl == null || targetUrl.isEmpty()) {
-            addErrorMessage("Target URL is required");
-            return;
-        }
-        try {
-            new URL(targetUrl);
-        } catch (MalformedURLException e) {
-            addErrorMessage("Invalid target URL");
-        }
-    }
-
-    @Override
-    public String doDefault() throws Exception {
-        PluginSettings pluginSettings = pluginSettingsFactory.createGlobalSettings();
-        setTarget((String) pluginSettings.get(TARGET_CONFIG_KEY));
-        return super.doDefault();
-    }
-
-    @Override
-    public String doExecute() throws Exception {
-        PluginSettings pluginSettings = pluginSettingsFactory.createGlobalSettings();
-        pluginSettings.put(TARGET_CONFIG_KEY, getTarget());
-        return SUCCESS;
-    }
+  @Override
+  @SupportedMethods({RequestMethod.POST})
+  public String doExecute() throws Exception {
+    PluginSettings pluginSettings = pluginSettingsFactory.createGlobalSettings();
+    pluginSettings.put(TARGET_CONFIG_KEY, getTarget());
+    return SUCCESS;
+  }
 }
