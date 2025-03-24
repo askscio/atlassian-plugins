@@ -1,5 +1,7 @@
 package ScioSearchConfigRestPlugin.impl;
 
+import com.atlassian.jira.security.request.RequestMethod;
+import com.atlassian.jira.security.request.SupportedMethods;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.plugin.spring.scanner.annotation.imports.JiraImport;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
@@ -12,11 +14,14 @@ import java.net.URL;
 
 import static ScioSearchConfigRestPlugin.impl.MyPluginComponentImpl.TARGET_CONFIG_KEY;
 
+@SupportedMethods({RequestMethod.POST})
 public class ScioSearchConfigAction extends JiraWebActionSupport {
-    @JiraImport private PluginSettingsFactory pluginSettingsFactory;
+    @JiraImport
+    private PluginSettingsFactory pluginSettingsFactory;
     private String target;
 
-    public ScioSearchConfigAction() {}
+    public ScioSearchConfigAction() {
+    }
 
     @Inject
     public ScioSearchConfigAction(PluginSettingsFactory pluginSettingsFactory) {
@@ -36,9 +41,10 @@ public class ScioSearchConfigAction extends JiraWebActionSupport {
     }
 
     @Override
+    @SupportedMethods({RequestMethod.POST})
     public void doValidation() {
         String targetUrl = getTarget();
-        if(targetUrl == null || targetUrl.isEmpty()) {
+        if (targetUrl == null || targetUrl.isEmpty()) {
             addErrorMessage("Target URL is required");
             return;
         }
@@ -50,6 +56,7 @@ public class ScioSearchConfigAction extends JiraWebActionSupport {
     }
 
     @Override
+    @SupportedMethods({RequestMethod.GET})
     public String doDefault() throws Exception {
         PluginSettings pluginSettings = pluginSettingsFactory.createGlobalSettings();
         setTarget((String) pluginSettings.get(TARGET_CONFIG_KEY));
@@ -57,6 +64,7 @@ public class ScioSearchConfigAction extends JiraWebActionSupport {
     }
 
     @Override
+    @SupportedMethods({RequestMethod.POST})
     public String doExecute() throws Exception {
         PluginSettings pluginSettings = pluginSettingsFactory.createGlobalSettings();
         pluginSettings.put(TARGET_CONFIG_KEY, getTarget());
