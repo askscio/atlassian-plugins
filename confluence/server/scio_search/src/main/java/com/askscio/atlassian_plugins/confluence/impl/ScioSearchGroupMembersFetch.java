@@ -1,6 +1,7 @@
 package com.askscio.atlassian_plugins.confluence.impl;
 
-import static com.askscio.atlassian_plugins.confluence.impl.MyPluginComponentImpl.SERVICE_ACCOUNT_USERNAME_CONFIG_KEY;
+import static com.askscio.atlassian_plugins.confluence.impl.Utils.isCurrentUserServiceAccount;
+import static com.askscio.atlassian_plugins.confluence.impl.Utils.isCurrentUserAdmin;
 
 import com.atlassian.confluence.user.UserAccessor;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ConfluenceImport;
@@ -35,26 +36,12 @@ public class ScioSearchGroupMembersFetch {
     this.pluginSettingsFactory = pluginSettingsFactory;
   }
 
-  private String getServiceAccountUsername() {
-    PluginSettings pluginSettings = pluginSettingsFactory.createGlobalSettings();
-    return (String) pluginSettings.get(SERVICE_ACCOUNT_USERNAME_CONFIG_KEY);
-  }
-
-  private void validateUserIsServiceAccount() {
-    final UserProfile curentUser = userManager.getRemoteUser();
-    final String serviceAccountUserName = getServiceAccountUsername();
-    if (curentUser == null
-        || serviceAccountUserName == null
-        || serviceAccountUserName.isEmpty()
-        || !serviceAccountUserName.equals(curentUser.getUsername())) {
-      throw new UnauthorizedException("Unauthorized");
-    }
-  }
-
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public ScioSearchGroupMembersResponse getGroupMembers(@QueryParam("groupName") String groupName) {
-    validateUserIsServiceAccount();
+    if (!isCurrentUserServiceAccount(userManager, pluginSettingsFactory)&&!isCurrentUserAdmin(userManager)) {
+      throw new UnauthorizedException("Unauthorized");
+    }
     Group group = userAccessor.getGroup(groupName);
     if (group == null) {
       throw new NotFoundException("Group not found");

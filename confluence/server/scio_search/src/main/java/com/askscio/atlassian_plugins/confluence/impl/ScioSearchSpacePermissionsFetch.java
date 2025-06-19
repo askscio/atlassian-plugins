@@ -1,11 +1,15 @@
 package com.askscio.atlassian_plugins.confluence.impl;
 
+import static com.askscio.atlassian_plugins.confluence.impl.Utils.isCurrentUserServiceAccount;
+import static com.askscio.atlassian_plugins.confluence.impl.Utils.isCurrentUserAdmin;
+
 import com.atlassian.confluence.api.model.people.Anonymous;
 import com.atlassian.confluence.security.SpacePermission;
 import com.atlassian.confluence.security.SpacePermissionManager;
 import com.atlassian.confluence.spaces.Space;
 import com.atlassian.confluence.spaces.SpaceManager;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ConfluenceImport;
+import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
 import com.atlassian.user.User;
@@ -32,13 +36,18 @@ public class ScioSearchSpacePermissionsFetch {
   @ConfluenceImport private final UserManager userManager;
   @ConfluenceImport private final SpaceManager spaceManager;
   @ConfluenceImport private final SpacePermissionManager spacePermissionManager;
+  @ConfluenceImport private final PluginSettingsFactory pluginSettingsFactory;
 
   @Inject
   public ScioSearchSpacePermissionsFetch(
-      UserManager userManager, SpaceManager spaceManager, SpacePermissionManager spacePermissionManager) {
+      UserManager userManager,
+      SpaceManager spaceManager,
+      SpacePermissionManager spacePermissionManager,
+      PluginSettingsFactory pluginSettingsFactory) {
     this.userManager = userManager;
     this.spaceManager = spaceManager;
     this.spacePermissionManager = spacePermissionManager;
+    this.pluginSettingsFactory = pluginSettingsFactory;
   }
 
   private void validateUserIsAdmin() {
@@ -60,7 +69,9 @@ public class ScioSearchSpacePermissionsFetch {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public ScioSpacePermissionsResponse getPermissionsForSpace(@QueryParam("spaceKey") String spaceKey) {
-    validateUserIsAdmin();
+    if(!isCurrentUserServiceAccount(userManager, pluginSettingsFactory)&&!isCurrentUserAdmin(userManager)) {
+      throw new UnauthorizedException("Unauthorized");
+    }
 
     // getSpace is deprecated v7.3.0 onwards, but is the only way to get this info currently,
     // see the comments on this thread- https://community.atlassian.com/t5/Confluence-articles/Get-spaces-by-keys-with-the-Confluence-API/ba-p/1939901
