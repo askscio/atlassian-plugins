@@ -2,11 +2,13 @@ package com.askscio.atlassian_plugins.confluence.impl;
 
 import static com.askscio.atlassian_plugins.confluence.impl.MyPluginComponentImpl.PLUGIN_STATUS_KEY;
 import static com.askscio.atlassian_plugins.confluence.impl.MyPluginComponentImpl.PLUGIN_STATUS_LAST_UPDATED_KEY;
+import static com.askscio.atlassian_plugins.confluence.impl.MyPluginComponentImpl.SERVICE_ACCOUNT_USERNAME_CONFIG_KEY;
 
 import com.atlassian.cache.Cache;
 import com.atlassian.cache.CacheLoader;
 import com.atlassian.extras.common.log.Logger;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
+import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
 import com.google.gson.Gson;
@@ -27,6 +29,18 @@ public class Utils {
   private static final int PLUGIN_STATUS_UPDATE_INTERVAL_SECONDS = 60; // in seconds
   private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(
       ZoneId.from(ZoneOffset.UTC));
+
+  public static boolean isCurrentUserServiceAccount(UserManager userManager, PluginSettingsFactory pluginSettingsFactory) {
+    final UserProfile curentUser = userManager.getRemoteUser();
+    final String serviceAccountUserName = getServiceAccountUsername(pluginSettingsFactory);
+    if (curentUser == null
+        || serviceAccountUserName == null
+        || serviceAccountUserName.isEmpty()
+        || !serviceAccountUserName.equals(curentUser.getUsername())) {
+      return false;
+    }
+    return true;
+  }
 
   public static boolean isCurrentUserAdmin(UserManager userManager) {
     final UserProfile profile = userManager.getRemoteUser();
@@ -63,6 +77,11 @@ public class Utils {
     }
     pluginSettingsCache.put(PLUGIN_STATUS_KEY, Optional.of(gson.toJson(pluginStatus)));
     persistInPluginSettingsIfNecessary(pluginSettingsCache, pluginSettings, pluginStatus);
+  }
+
+  private static String getServiceAccountUsername(PluginSettingsFactory pluginSettingsFactory) {
+    PluginSettings pluginSettings = pluginSettingsFactory.createGlobalSettings();
+    return (String) pluginSettings.get(SERVICE_ACCOUNT_USERNAME_CONFIG_KEY);
   }
 
   private static void persistInPluginSettingsIfNecessary(Cache<String, Optional<String>> cache,
