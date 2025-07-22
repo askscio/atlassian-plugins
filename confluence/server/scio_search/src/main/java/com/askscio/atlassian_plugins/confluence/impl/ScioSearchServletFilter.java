@@ -90,7 +90,13 @@ public class ScioSearchServletFilter implements Filter {
 
     final HttpServletRequest httpreq = (HttpServletRequest) servletRequest;
     // Saving a page or blogpost fires: PUT http://confluence-server:8090/rest/api/content/65603?status=draft
-    if (httpreq.getRequestURI().startsWith("/rest/api/content/") &&
+
+    // Fix bug:
+    // [BUG] the plugin can't support multi-level URLs case
+    // https://github.com/askscio/atlassian-plugins/issues/36
+    // This codes have been tested successfully. They can support multi-level URLs case.
+    // huang.rong.gang@navercorp.com
+    if (httpreq.getRequestURI().contains("/rest/api/content/") &&
         ALLOWED_REST_API_CONTENT_ACTIONS.contains(httpreq.getMethod())) {
       if ("DELETE".equals(httpreq.getMethod())) {
         logger.debug("Delete url: " + httpreq.getMethod() + ": " + httpreq.getRequestURI());
