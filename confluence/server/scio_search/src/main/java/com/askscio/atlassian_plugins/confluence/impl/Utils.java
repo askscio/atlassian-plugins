@@ -19,8 +19,6 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 
 public class Utils {
 
@@ -99,7 +97,6 @@ public class Utils {
     }
   }
 
-  @JsonAutoDetect(fieldVisibility = Visibility.ANY)
   public static class PluginStatus implements Serializable {
 
     public String lastWebhookResponseTime;
