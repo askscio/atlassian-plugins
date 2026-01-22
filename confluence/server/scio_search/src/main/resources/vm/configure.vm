@@ -9,13 +9,13 @@
         #form_xsrfToken()
         <h2>Target URL</h2>
 
-        <input type="text" name="target" id="target" value="$generalUtil.htmlEncode( $target )" class="text">
+        <input type="text" name="target" id="target" value="${target}" class="text">
 
         <div class="description">Configure target url for Scio Search plugin for sending the webhook events.</div>
 
         <h2>Service Account Username</h2>
 
-        <input type="text" name="username" id="username" value="$generalUtil.htmlEncode( $username )" class="text">
+        <input type="text" name="username" id="username" value="${username}" class="text">
 
         <div class="description">Configure Glean Crawler Service Account Username.</div>
 
