@@ -34,7 +34,7 @@ public class Utils {
     if (curentUser == null
         || serviceAccountUserName == null
         || serviceAccountUserName.isEmpty()
-        || !serviceAccountUserName.equals(curentUser.getUsername())) {
+        || !serviceAccountUserName.equalsIgnoreCase(curentUser.getUsername())) {
       return false;
     }
     return true;
