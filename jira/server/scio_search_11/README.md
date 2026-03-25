@@ -1,8 +1,8 @@
-# Jira Glean Search Plugin - Jira 10.x.x
+# Jira Glean Search Plugin - Jira 11.x.x
 
 The Glean Search plugin for Jira Server or Data Center editions provides additional ranking
 signals for Glean. It sends additional webhooks back to Glean whenever a user views a page. This
-search plugin is updated to support Jira 10.x.x. The
+search plugin is updated to support Jira 11.x.x. The
 content of these messages are:
 
 * URL visited
