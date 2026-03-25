@@ -1,6 +1,0 @@
-com.atlassian.jira.config.properties.ApplicationProperties
-com.atlassian.jira.security.groups.GroupManager
-com.atlassian.jira.util.BuildUtilsInfo
-com.atlassian.plugin.PluginAccessor
-com.atlassian.sal.api.pluginsettings.PluginSettingsFactory
-com.atlassian.sal.api.user.UserManager
