@@ -1,0 +1,54 @@
+Manifest-Version: 1.0
+Atlassian-Build-Date: 2026-03-25T14:47:23+0530
+Atlassian-Plugin-Key: com.askscio.atlassian_plugins.jira.glean_search
+Bnd-LastModified: 1774430243343
+Build-Jdk-Spec: 21
+Bundle-Description: This is the com.askscio.atlassian_plugins.jira:glean
+ _search plugin for Atlassian        JIRA.
+Bundle-DocURL: https://www.glean.com/
+Bundle-ManifestVersion: 2
+Bundle-Name: Glean Search
+Bundle-SymbolicName: com.askscio.atlassian_plugins.jira.glean_search
+Bundle-Vendor: Glean
+Bundle-Version: 3.0.0
+Created-By: Apache Maven Bundle Plugin 5.1.9
+Export-Package: ScioSearchConfigRestPlugin.api;version="3.0.0"
+Import-Package: 
+ ScioSearchConfigRestPlugin.api;version="[3.0,4)",
+ com.atlassian.extras.common.log,
+ com.atlassian.jira.component,
+ com.atlassian.jira.config.properties,
+ com.atlassian.jira.issue.security,
+ com.atlassian.jira.permission,
+ com.atlassian.jira.project,
+ com.atlassian.jira.scheme,
+ com.atlassian.jira.security,
+ com.atlassian.jira.security.groups,
+ com.atlassian.jira.security.request,
+ com.atlassian.jira.security.roles,
+ com.atlassian.jira.user,
+ com.atlassian.jira.user.util,
+ com.atlassian.jira.util,
+ com.atlassian.jira.web.action,
+ com.atlassian.plugin,
+ com.atlassian.plugin.spring.scanner.annotation.imports,
+ com.atlassian.sal.api,
+ com.atlassian.sal.api.pluginsettings,
+ com.atlassian.sal.api.user,
+ com.fasterxml.jackson.annotation,
+ jakarta.inject,
+ jakarta.servlet,
+ jakarta.servlet.http,
+ jakarta.ws.rs,
+ jakarta.ws.rs.core,
+ java.io,
+ java.lang,
+ java.lang.annotation,
+ java.lang.invoke,
+ java.net,
+ java.nio.charset,
+ java.util,
+ java.util.concurrent
+Originally-Created-By: Apache Maven Bundle Plugin 5.1.9
+Spring-Context: *
+Tool: Bnd-6.3.1.202206071316

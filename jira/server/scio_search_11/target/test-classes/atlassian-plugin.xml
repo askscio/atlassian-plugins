@@ -1,0 +1,15 @@
+<atlassian-plugin key="com.askscio.atlassian_plugins.jira.glean_search-tests" name="Glean Search" plugins-version="2">
+    <plugin-info>
+        <description>This is the com.askscio.atlassian_plugins.jira:glean_search plugin for Atlassian
+        JIRA.</description>
+        <version>3.0.0</version>
+        <vendor name="Glean" url="https://www.glean.com/" />
+    </plugin-info>
+
+    <!-- from our base plugin -->
+    <component-import key="myComponent" interface="ScioSearchConfigRestPlugin.api.MyPluginComponent"/>
+
+    <!-- from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+    
+</atlassian-plugin>

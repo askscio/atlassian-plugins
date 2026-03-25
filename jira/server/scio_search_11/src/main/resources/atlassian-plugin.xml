@@ -1,0 +1,82 @@
+<atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
+  <plugin-info>
+    <description>${project.description}</description>
+    <version>${project.version}</version>
+    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+    <param name="atlassian-data-center-status">compatible</param>
+    <param name="atlassian-data-center-compatible">true</param>
+    <param name="read-only-access-mode-compatible">true</param>
+    <param name="plugin-type">both</param>
+    <param name="plugin-icon">images/pluginIcon.png</param>
+    <param name="plugin-logo">images/pluginLogo.png</param>
+  </plugin-info>
+
+  <!-- add our i18n resource -->
+  <resource type="i18n" name="i18n" location="scio_search"/>
+
+  <!-- add our web resources -->
+  <web-resource key="scio_search-resources" name="scio_search Web Resources">
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+
+    <resource type="download" name="scio_search.css" location="/css/scio_search.css"/>
+    <resource type="download" name="scio_search.js" location="/js/scio_search.js"/>
+    <resource type="download" name="images/" location="/images"/>
+
+    <context>scio_search</context>
+  </web-resource>
+
+  <servlet-filter key="scioSearchServletFilter"
+    class="ScioSearchConfigRestPlugin.impl.ScioSearchServletFilter" >
+    <description>Updates Scio ranking signals based on URLs visited.</description>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+    <dispatcher>REQUEST</dispatcher>
+  </servlet-filter>
+
+  <rest key="scioSearchConfigRest" path="/scio_search" version="1.0">
+    <description>Provides Scio Search plugin configuration endpoint.</description>
+  </rest>
+
+  <webwork1 key="scio-search-config-actions" name="Scio Search Config Actions" class="java.lang.Object" roles-required="admin" >
+    <actions>
+      <action name="ScioSearchConfigRestPlugin.impl.ScioSearchConfigAction" alias="ScioSearchConfigAction">
+        <view name="success">/vm/success.vm</view>
+        <view name="input">/vm/input.vm</view>
+      </action>
+    </actions>
+  </webwork1>
+
+  <web-section key="scio-search-config-section"
+               name="Scio Search Config Section"
+               location="system.admin"
+               weight="110">
+    <description>Scio Search Config Section</description>
+    <label key="scio_search.config.section.name"/>
+  </web-section>
+
+  <web-item key="scio-search-config-action" name="Scio Search Config Action" section="system.admin/scio-search-config-section" weight="10">
+    <label key="scio_search.config.action.name"/>
+    <link>/secure/ScioSearchConfigAction!default.jspa</link>
+  </web-item>
+
+  <webwork1 key="scio-search-service-account-actions" name="Scio Search Service Account Actions" class="java.lang.Object" roles-required="admin" >
+    <actions>
+      <action name="ScioSearchConfigRestPlugin.impl.ScioSearchServiceAccountAction" alias="ScioSearchServiceAccountAction">
+        <view name="success">/vm/serviceAccountSuccess.vm</view>
+        <view name="input">/vm/serviceAccountInput.vm</view>
+      </action>
+    </actions>
+  </webwork1>
+  <web-section key="scio-search-service-account-section"
+               name="scio-search-service-account Section"
+               location="system.admin"
+               weight="110">
+    <description>Scio Search Config Section</description>
+    <label key="scio_search.serviceAccount.section.name"/>
+  </web-section>
+  <web-item key="scio-search-service-account-action" name="Scio Search Service Account Action" section="system.admin/scio-search-service-account-section" weight="10">
+    <label key="scio_search.serviceAccount.action.name"/>
+    <link>/secure/ScioSearchServiceAccountAction!default.jspa</link>
+  </web-item>
+</atlassian-plugin>

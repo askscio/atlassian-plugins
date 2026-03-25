@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/context http://www.springframework.org/schema/beans/spring-beans.xsd http://www.eclipse.org/gemini/blueprint/schema/blueprint http://www.eclipse.org/gemini/blueprint/schema/blueprint/gemini-blueprint.xsd" xmlns:osgi="http://www.eclipse.org/gemini/blueprint/schema/blueprint" xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <beans:bean id="my-component-wired-test" autowire="default" class="it.GleanSearchConfigRestPlugin.MyComponentWiredTest"/>
+    <osgi:service id="my-component-wired-test_osgi-service" ref="my-component-wired-test">
+        <osgi:interfaces>
+            <beans:value>it.GleanSearchConfigRestPlugin.MyComponentWiredTest</beans:value>
+        </osgi:interfaces>
+        <osgi:service-properties>
+            <beans:entry key="inProductTest" value="true"/>
+        </osgi:service-properties>
+    </osgi:service>
+</beans>

@@ -8,7 +8,7 @@ import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.atlassian.sal.api.user.UserManager;
 
-import jakarta.inject.Inject;
+import javax.inject.Inject;
 import java.net.MalformedURLException;
 import java.net.URL;
 

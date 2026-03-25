@@ -11,13 +11,13 @@ import com.atlassian.jira.project.Project;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.atlassian.sal.api.user.UserManager;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.MediaType;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.ArrayList;
 
