@@ -1,8 +1,8 @@
 package ScioSearchConfigRestPlugin.impl;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 public class UnauthorizedException extends WebApplicationException {
   public UnauthorizedException(String message) {
