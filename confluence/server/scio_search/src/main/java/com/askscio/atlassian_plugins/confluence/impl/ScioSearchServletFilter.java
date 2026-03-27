@@ -38,8 +38,16 @@ import javax.servlet.http.HttpServletRequest;
 @Named
 public class ScioSearchServletFilter implements Filter {
 
-  private static final int NUM_BACKGROUND_THREADS = 1;
-  private static final int MAX_OUTSTANDING_REQUESTS = 10;
+  // Fix bug:
+  // [BUG] the plugin will lose some records with the station of high concurrency
+  // https://github.com/askscio/atlassian-plugins/issues/34
+  // This codes have been tested successfully in 16 cores and 256 GB memory. There is no data lost.
+  // huang.rong.gang@navercorp.com
+  private static final int NUM_BACKGROUND_THREADS = 32;
+  //  private static final int NUM_BACKGROUND_THREADS = 1;
+
+  private static final int MAX_OUTSTANDING_REQUESTS = 5000;
+  //  private static final int MAX_OUTSTANDING_REQUESTS = 10;
   private static final int BASE_URL_MIN_PREFIX = "https://".length() + 1;
 
   private static final Logger.Log logger = Logger.getInstance(ScioSearchServletFilter.class);
